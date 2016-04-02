@@ -1,26 +1,21 @@
-package edu.nyu.cloud.beans;
+package firsthibernate;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-/**
- * This class is used to capture user information which will be captured during sign-up.
- * 
- * @author rahul.khanna
- * Date:28-Mar-2016
- */
+@Entity
+@Table(name="USER_PROFILE")
 public class UserProfile {
 
-	
-	private final int id;
-	private final String userName;
-	private final String userPassword;
-	private final String userAddress;
-	private final String firstName;
-	private final String lastName;
-	private final String phoneNumber;
-	private final String aboutMe;
-	private AtomicInteger numberOfThumbsUp;
-	private AtomicInteger numberOfThumbsDown;
+	@Id	
+	int id;
+	private String userName;
+	private String userPassword;
+	private String userAddress;
+	private String firstName;
+	private String lastName;
+	private String phoneNumber;
 
 	/**
 	 * Constructor
@@ -32,8 +27,9 @@ public class UserProfile {
 	 * @param lastName
 	 * @param phoneNumber
 	 */
+	
 	public UserProfile(int id,String userName, String userPassword, String userAddress, String firstName, String lastName,
-			String phoneNumber, String aboutMe) {
+			String phoneNumber) {
 		super();
 		this.id = id;
 		this.userName = userName;
@@ -42,33 +38,13 @@ public class UserProfile {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phoneNumber = phoneNumber;
-		this.aboutMe = aboutMe;
+		
 	}
-
 	
-	public int getNumberOfThumbsUp() {
-		return numberOfThumbsUp.get();
+	public UserProfile()
+	{
+		
 	}
-
-
-	public int incrementNumberOfThumsUp(){
-		return numberOfThumbsDown.incrementAndGet();
-	}
-
-
-	public int getNumberOfThumbsDown() {
-		return numberOfThumbsDown.get();
-	}
-
-	public int incrementNumberOfThumbsDown(){
-		return numberOfThumbsDown.decrementAndGet();
-	}
-
-
-	public String getAboutMe() {
-		return aboutMe;
-	}
-
 
 	public String getUserName() {
 		return userName;
