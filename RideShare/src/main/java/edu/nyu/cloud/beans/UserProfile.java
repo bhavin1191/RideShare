@@ -1,16 +1,13 @@
 package edu.nyu.cloud.beans;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
- * This class is used to capture user information which will be captured during sign-up.
+ * This class is used to capture user information which will be captured during
+ * sign-up.
  * 
- * @author rahul.khanna
- * Date:28-Mar-2016
+ * @author rahul.khanna Date:28-Mar-2016
  */
 public class UserProfile {
 
-	
 	private final int id;
 	private final String userName;
 	private final String userPassword;
@@ -18,13 +15,21 @@ public class UserProfile {
 	private final String firstName;
 	private final String lastName;
 	private final String phoneNumber;
+	private final String sex;
 	private final String aboutMe;
-	private AtomicInteger numberOfThumbsUp;
-	private AtomicInteger numberOfThumbsDown;
+	private int numberOfThumbsUp;
+	private int numberOfThumbsDown;
+
+	/**
+	 * Default constructor
+	 */
+	public UserProfile() {
+		this(0, null, null, null, null, null, null, null,null);
+	}
 
 	/**
 	 * Constructor
-	 *  
+	 * 
 	 * @param userName
 	 * @param userPassword
 	 * @param userAddress
@@ -32,8 +37,8 @@ public class UserProfile {
 	 * @param lastName
 	 * @param phoneNumber
 	 */
-	public UserProfile(int id,String userName, String userPassword, String userAddress, String firstName, String lastName,
-			String phoneNumber, String aboutMe) {
+	public UserProfile(int id, String userName, String userPassword, String userAddress, String firstName,
+			String lastName, String phoneNumber, String aboutMe,String sex) {
 		super();
 		this.id = id;
 		this.userName = userName;
@@ -43,32 +48,33 @@ public class UserProfile {
 		this.lastName = lastName;
 		this.phoneNumber = phoneNumber;
 		this.aboutMe = aboutMe;
+		this.sex = sex;
 	}
-
 	
+
+	public String getSex() {
+		return sex;
+	}
+
 	public int getNumberOfThumbsUp() {
-		return numberOfThumbsUp.get();
+		return numberOfThumbsUp;
 	}
 
-
-	public int incrementNumberOfThumsUp(){
-		return numberOfThumbsDown.incrementAndGet();
+	public int incrementNumberOfThumsUp() {
+		return numberOfThumbsDown += 1;
 	}
-
 
 	public int getNumberOfThumbsDown() {
-		return numberOfThumbsDown.get();
+		return numberOfThumbsDown;
 	}
 
-	public int incrementNumberOfThumbsDown(){
-		return numberOfThumbsDown.decrementAndGet();
+	public int incrementNumberOfThumbsDown() {
+		return numberOfThumbsDown -= 1;
 	}
-
 
 	public String getAboutMe() {
 		return aboutMe;
 	}
-
 
 	public String getUserName() {
 		return userName;
@@ -100,5 +106,5 @@ public class UserProfile {
 	public int getId() {
 		return id;
 	}
-	
+
 }
