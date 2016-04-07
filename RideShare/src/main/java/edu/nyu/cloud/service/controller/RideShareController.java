@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.nyu.cloud.beans.Route;
-import edu.nyu.cloud.google.service.MapService;
-import edu.nyu.cloud.newride.NewRideCreator;
+import edu.nyu.cloud.beans.UserProfile;
+import edu.nyu.cloud.beans.factory.BeanFactory;
 import edu.nyu.cloud.service.beans.IncomingPoolRequest;
 import edu.nyu.cloud.service.beans.NewRideSharingRequest;
-import edu.nyu.cloud.service.beans.NewUserRegistrationForm;
+import edu.nyu.cloud.user.dao.db.UserDao;
 
 /**
  * This class represents the controller for the app.
@@ -29,28 +29,20 @@ import edu.nyu.cloud.service.beans.NewUserRegistrationForm;
 @RestController
 public class RideShareController {
 
-	@SuppressWarnings("unused")
 	private static final Logger LOG = (Logger) Logger.getLogger(RideShareController.class.getName());
-	private final NewRideCreator rideCreator;
-	private final MapService mapService;
+	
+	private final UserDao userDao;
+	private final BeanFactory beanFactory;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param rideCreator
 	 */
-	public RideShareController(NewRideCreator rideCreator, MapService mapService) {
+	public RideShareController(BeanFactory beanFactory, UserDao userDao) {
 		super();
-		this.rideCreator = rideCreator;
-		this.mapService = mapService;
-	}
-
-	public NewRideCreator getRideCreator() {
-		return rideCreator;
-	}
-
-	public MapService getMapService() {
-		return mapService;
+		this.beanFactory = beanFactory;
+		this.userDao = userDao;
 	}
 
 	/**
@@ -61,7 +53,7 @@ public class RideShareController {
 	 */
 	@RequestMapping(value = "/newpoolrequest", method = { RequestMethod.POST, RequestMethod.GET })
 	public void openNewRideSharingRequest(@RequestBody IncomingPoolRequest newPoolRequest) {
-		getRideCreator().createNewRideForPool(newPoolRequest);
+		beanFactory.getRideCreator().createNewRideForPool(newPoolRequest);
 	}
 
 	/**
@@ -70,8 +62,9 @@ public class RideShareController {
 	 * @param newUserData
 	 */
 	@RequestMapping(value = "/newuser", method = { RequestMethod.POST, RequestMethod.GET })
-	public void registerNewUser(@RequestBody(required = false) NewUserRegistrationForm newUserData) {
-		System.out.println("incoming new userId = " + newUserData.getFirstName());
+	public void registerNewUser(@RequestBody(required = false) UserProfile newUserData) {
+		LOG.info("incoming new userId = " + newUserData.getFirstName());
+		userDao.persistUserProfie(newUserData);
 	}
 
 	/**
@@ -84,7 +77,7 @@ public class RideShareController {
 	@RequestMapping(value = "/searchRoutesForNewCarPoolRequest", method = { RequestMethod.POST, RequestMethod.GET })
 	public ResponseEntity<List<Route>> fetchRoutesForNewRideRegistration(
 			@RequestBody IncomingPoolRequest newPoolRequestToSearchRoutes) {
-		return new ResponseEntity<List<Route>>(mapService.fetchPossibleRoutes(newPoolRequestToSearchRoutes.getSource(),
+		return new ResponseEntity<List<Route>>(beanFactory.getMapService().fetchPossibleRoutes(newPoolRequestToSearchRoutes.getSource(),
 				newPoolRequestToSearchRoutes.getDestination()), HttpStatus.FOUND);
 	}
 
@@ -96,7 +89,7 @@ public class RideShareController {
 	 */
 	@RequestMapping(value = "/searchCarForPooling", method = { RequestMethod.POST, RequestMethod.GET })
 	public void searchNewRideToShare(@RequestBody NewRideSharingRequest newRideRequest) {
-		
+		// TODO:
 	}
 
 }
