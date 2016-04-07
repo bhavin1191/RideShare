@@ -23,7 +23,7 @@ public class UserDaoImpl extends ModifiableCommonDBDao<UserProfile, UserProfile>
 
 	@Override
 	public void persistUserProfie(UserProfile profile) {
-		save(profile);
+		savePersistent(profile);
 	}
 
 	@Override
