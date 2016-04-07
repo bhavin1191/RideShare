@@ -17,7 +17,7 @@
 
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="dataSource1" />
 		<property name="configLocation">
 			<value>hibernate.cfg.xml</value>
 		</property>
@@ -29,7 +29,7 @@
 	</bean>
 
 	<!-- JDBC configuration -->
-	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.XADataSource">
+	<bean id="dataSource1" class="org.apache.tomcat.jdbc.pool.XADataSource">
 		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
 		<property name="url" value="${jdbcUrlRideShare}" />
 		<property name="username" value="${userRideShare}" />
