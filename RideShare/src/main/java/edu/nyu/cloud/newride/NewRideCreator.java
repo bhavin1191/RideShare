@@ -4,7 +4,7 @@
 package edu.nyu.cloud.newride;
 
 import edu.nyu.cloud.beans.NewRide;
-import edu.nyu.cloud.newride.dao.NewRideDao;
+import edu.nyu.cloud.newride.dao.db.NewRideDao;
 import edu.nyu.cloud.service.beans.IncomingPoolRequest;
 
 /**
