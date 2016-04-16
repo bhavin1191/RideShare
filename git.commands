@@ -1,0 +1,18 @@
+Fork https://github.com/rahulkhanna89/RideShare
+clone your Fork (i.e. if your user-id is foo, git clone git@github.com:foo/RideShare.git)
+git remote add rideshare git@github.com:rahulkhanna89/RideShare.git
+
+## To take latest code from repo
+git pull rideshare master
+Before commit add your changed files
+git add (all your files)
+git commit -m "Message"
+git push
+// then open a Pull Request at https://github.com/rahulkhanna89/RideShare
+
+
+Other helpful git commands:
+// to see all commits you've done
+git log
+// instead of adding a file, if you need to remove a file
+git rm
