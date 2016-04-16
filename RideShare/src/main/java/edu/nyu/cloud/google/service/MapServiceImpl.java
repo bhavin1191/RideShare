@@ -32,7 +32,7 @@ public class MapServiceImpl implements MapService {
 			DirectionsRoute[] routes = DirectionsApi.getDirections(context, "New Jersey","New York").await();
 			for (DirectionsRoute directionsRoute : routes) {
 				DirectionsLeg[] legs = directionsRoute.legs;
-				directionsRoute.overviewPolyline.decodePath().stream().forEach(x-> System.out.println(x));
+				//directionsRoute.overviewPolyline.decodePath().stream().forEach(x-> System.out.println(x));
 				for (DirectionsLeg directionsLeg : legs) {
 					//System.out.println(directionsLeg.startAddress+" "+directionsLeg.endAddress);
 					DirectionsStep[] steps = directionsLeg.steps;
