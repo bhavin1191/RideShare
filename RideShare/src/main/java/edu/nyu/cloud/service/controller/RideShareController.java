@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.nyu.cloud.beans.Route;
 import edu.nyu.cloud.beans.UserProfile;
 import edu.nyu.cloud.beans.factory.BeanFactory;
+import edu.nyu.cloud.google.service.MapService;
+import edu.nyu.cloud.google.service.MapServiceImpl;
 import edu.nyu.cloud.service.beans.IncomingPoolRequest;
 import edu.nyu.cloud.service.beans.NewRideSharingRequest;
 import edu.nyu.cloud.user.dao.db.UserDao;
