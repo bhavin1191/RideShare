@@ -81,7 +81,7 @@ public class ModifiableCommonDBDao<T, E> extends CommonDBDao<T, E> implements Ba
 
 	@Override
 	public void save(T object) {
-		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -98,13 +98,13 @@ public class ModifiableCommonDBDao<T, E> extends CommonDBDao<T, E> implements Ba
 
 	@Override
 	public void update(T object) {
-		// TODO Auto-generated method stub
+		getSession().update(object);
 
 	}
 
 	@Override
 	public void merge(T object) {
-		// TODO Auto-generated method stub
+		getSession().merge(object);
 
 	}
 
