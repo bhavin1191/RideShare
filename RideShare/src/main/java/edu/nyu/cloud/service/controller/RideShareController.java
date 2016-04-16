@@ -34,6 +34,10 @@ public class RideShareController {
 	private final UserDao userDao;
 	private final BeanFactory beanFactory;
 
+	public RideShareController(){
+		this(null,null);
+	}
+	
 	/**
 	 * Constructor
 	 * 
