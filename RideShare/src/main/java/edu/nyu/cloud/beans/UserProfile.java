@@ -8,17 +8,61 @@ package edu.nyu.cloud.beans;
  */
 public class UserProfile {
 
-	private final int id;
-	private final String userName;
-	private final String userPassword;
-	private final String userAddress;
-	private final String firstName;
-	private final String lastName;
-	private final String phoneNumber;
-	private final String sex;
-	private final String aboutMe;
+	private int id;
+	private String userName;
+	private String userPassword;
+	private String userAddress;
+	private String firstName;
+	private String lastName;
+	private String phoneNumber;
+	private String sex;
+	private String aboutMe;
 	private int numberOfThumbsUp;
 	private int numberOfThumbsDown;
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
+	}
+
+	public void setUserAddress(String userAddress) {
+		this.userAddress = userAddress;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public void setAboutMe(String aboutMe) {
+		this.aboutMe = aboutMe;
+	}
+
+	public void setNumberOfThumbsUp(int numberOfThumbsUp) {
+		this.numberOfThumbsUp = numberOfThumbsUp;
+	}
+
+	public void setNumberOfThumbsDown(int numberOfThumbsDown) {
+		this.numberOfThumbsDown = numberOfThumbsDown;
+	}
 
 	/**
 	 * Default constructor
