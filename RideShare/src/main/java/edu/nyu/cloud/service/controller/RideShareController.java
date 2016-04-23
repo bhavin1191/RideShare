@@ -70,7 +70,8 @@ public class RideShareController {
 	@RequestMapping(value = "/newuser", method = { RequestMethod.POST, RequestMethod.GET })
 	public void registerNewUser(@RequestBody(required = false) UserProfile newUserData) {
 		LOG.info("incoming new userId = " + newUserData.getFirstName());
-		userDao.persistUserProfie(newUserData);
+		System.out.println("incoming new userId = " + newUserData.getFirstName());
+		//userDao.persistUserProfie(newUserData);
 	}
 
 	/**
