@@ -3,10 +3,7 @@
  */
 package edu.nyu.cloud.google.service;
 
-import java.util.Date;
 import java.util.List;
-
-import org.joda.time.DateTime;
 
 import edu.nyu.cloud.beans.Route;
 
@@ -18,6 +15,6 @@ import edu.nyu.cloud.beans.Route;
  */
 public interface MapService {
 	
-	public List<Route> fetchPossibleRoutes(String source, String destination, DateTime date);
+	public List<Route> fetchPossibleRoutes(String source, String destination);
 
 }

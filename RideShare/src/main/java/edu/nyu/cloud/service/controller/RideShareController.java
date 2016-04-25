@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.nyu.cloud.beans.Route;
 import edu.nyu.cloud.beans.UserProfile;
 import edu.nyu.cloud.beans.factory.BeanFactory;
-import edu.nyu.cloud.google.service.MapService;
-import edu.nyu.cloud.google.service.MapServiceImpl;
+import edu.nyu.cloud.cache.Cache;
 import edu.nyu.cloud.service.beans.IncomingPoolRequest;
 import edu.nyu.cloud.service.beans.NewRideSharingRequest;
 import edu.nyu.cloud.user.dao.db.UserDao;
@@ -35,18 +34,21 @@ public class RideShareController {
 	
 	private final UserDao userDao;
 	private final BeanFactory beanFactory;
+	private final Cache applicationCache;
 
 	public RideShareController(){
-		this(null,null);
+		this(null,null,null);
 	}
 	
 	/**
 	 * Constructor
+	 * @param applicationCache 
 	 * 
 	 * @param rideCreator
 	 */
-	public RideShareController(BeanFactory beanFactory, UserDao userDao) {
+	public RideShareController(BeanFactory beanFactory, UserDao userDao, Cache applicationCache) {
 		super();
+		this.applicationCache = applicationCache;
 		this.beanFactory = beanFactory;
 		this.userDao = userDao;
 	}
@@ -84,8 +86,13 @@ public class RideShareController {
 	@RequestMapping(value = "/searchRoutesForNewCarPoolRequest", method = { RequestMethod.POST, RequestMethod.GET })
 	public ResponseEntity<List<Route>> fetchRoutesForNewRideRegistration(
 			@RequestBody IncomingPoolRequest newPoolRequestToSearchRoutes) {
-		return new ResponseEntity<List<Route>>(beanFactory.getMapService().fetchPossibleRoutes(newPoolRequestToSearchRoutes.getSource(),
-				newPoolRequestToSearchRoutes.getDestination()), HttpStatus.FOUND);
+		List<Route> routes = applicationCache.getRoutes(newPoolRequestToSearchRoutes.getSource(), newPoolRequestToSearchRoutes.getDestination());
+		if(routes == null){
+			routes = beanFactory.getMapService().fetchPossibleRoutes(newPoolRequestToSearchRoutes.getSource(),
+					newPoolRequestToSearchRoutes.getDestination());
+			applicationCache.addRoutesToCache(newPoolRequestToSearchRoutes.getSource(), newPoolRequestToSearchRoutes.getDestination(), routes);
+		}
+		return new ResponseEntity<List<Route>>(routes, HttpStatus.FOUND);
 	}
 
 	/**
