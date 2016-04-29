@@ -3,47 +3,64 @@
  */
 package edu.nyu.cloud.cache;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import edu.nyu.cloud.beans.Route;
+import org.springframework.data.redis.core.RedisTemplate;
 
 /**
- * This class is the implementation of Cache.
+ * This class is the implementation of Cache. Every other specific cache
+ * implementation should be extended from this class.
  * 
+ * @param V
+ *            denotes the type of Cached object.
  * @author rahulkhanna Date:24-Apr-2016
  */
-public class CacheImpl implements Cache {
+public abstract class CacheImpl<V> implements Cache<V> {
 
-	private final Map<String, List<Route>> possibleRoutesBetweenTwoPoints;
-
+	private final RedisTemplate<String, V> cacheTemplate;
+	
 	/**
-	 * @param possibleRoutesBetweenTwoPoints
+	 * @param cacheTemplate
 	 */
-	public CacheImpl() {
-		this.possibleRoutesBetweenTwoPoints = new ConcurrentHashMap<>();
-	}
-
-	@Override
-	public List<Route> getRoutes(String source, String destination) {
-		String key = createKeyFromSourceAndDestination(source, destination);
-		return possibleRoutesBetweenTwoPoints.get(key);
+	protected CacheImpl(RedisTemplate<String,V> cacheTemplate) {
+		this.cacheTemplate = cacheTemplate;
 	}
 
 	/**
-	 * @param source
-	 * @param destination
+	 * This function is used to get the object from the cache.
+	 * 
+	 * @return the cached object corresponding to given <code>cacheName</code>
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public V getCacheByName(CacheName cacheName) {
+		return (V) cacheTemplate.opsForHash().get(cacheName.name(), cacheName.name().hashCode());
+	}
+
+	public void addCacheForGivenName(CacheName cacheName, V o){
+		cacheTemplate.opsForHash().put(cacheName.name(), cacheName.name().hashCode(), o);
+	}
+	
+	public void save(CacheName cacheName, V o){
+		addCacheForGivenName(cacheName, o);
+	}
+	
+	/**
+	 * This function is used to create key out of given values separated by "_".
+	 * 
+	 * @param values
 	 * @return
 	 */
-	private String createKeyFromSourceAndDestination(String source, String destination) {
-		return source + "_" + destination;
-	}
-
-	@Override
-	public void addRoutesToCache(String source, String destination, List<Route> possibleRoutes) {
-		String key = createKeyFromSourceAndDestination(source, destination);
-		possibleRoutesBetweenTwoPoints.put(key, possibleRoutes);
+	protected String createKey(String... values) {
+		String key = "";
+		if (values != null && values.length > 0) {
+			for (int i = 0; i < values.length - 1; i++) {
+				String val = values[i];
+				key += val + "_";
+			}
+			key += values[values.length - 1];
+		} else {
+			throw new IllegalArgumentException("Key can not be created from empty values.");
+		}
+		return key;
 	}
 
 }
