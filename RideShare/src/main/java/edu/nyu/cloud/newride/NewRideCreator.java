@@ -28,11 +28,8 @@ public class NewRideCreator {
 	}
 
 	public void createNewRideForPool(IncomingPoolRequest newPoolRequest) {
-		NewRide ride  = new NewRide(newPoolRequest.getUserId(), newPoolRequest.getSource(), newPoolRequest.getDestination(), newPoolRequest.getDate()
-				,null //possibleRoutes
-				,0// selectedRouteIndex);
-				);
-		
+		NewRide ride  = new NewRide(newPoolRequest.getUserId(), newPoolRequest.getSource(), newPoolRequest.getDestination(), newPoolRequest.getDate(),
+				newPoolRequest.getSelectRoute());
 	}
 
 	
