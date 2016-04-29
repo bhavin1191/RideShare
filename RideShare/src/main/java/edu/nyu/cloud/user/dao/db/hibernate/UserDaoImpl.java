@@ -23,14 +23,14 @@ public class UserDaoImpl extends ModifiableCommonDBDao<UserProfile, UserProfile>
 
 	@Override
 	public void persistUserProfie(UserProfile profile) {
-		
+		profile.setId(getNextKey());
 		savePersistent(profile);
 	}
 
 	@Override
 	public UserProfile getUserProfileByUserId(String userId) {
 		//TODO: implement fetching of user profile.
-		return null;
+		return (UserProfile) get(Long.parseLong(userId));
 	}
 
 }
