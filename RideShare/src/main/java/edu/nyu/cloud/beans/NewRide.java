@@ -3,6 +3,7 @@
  */
 package edu.nyu.cloud.beans;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -11,14 +12,20 @@ import java.util.List;
  * 
  * @author rahulkhanna Date:05-Apr-2016
  */
-public class NewRide {
+public class NewRide implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 
+	 */
 	private final String requester;
 	private final String source;
 	private final String destination;
 	private final Date timeOfTrip;
-	private final List<Route> possibleRoutes;
-	private final int selectedRouteIndex;
+	private final List<Route> selectedRoute;
 
 	/**
 	 * Constructor
@@ -29,15 +36,13 @@ public class NewRide {
 	 * @param timeOfTrip
 	 * @param possibleRoutes
 	 */
-	public NewRide(String requester, String source, String destination, Date timeOfTrip, List<Route> possibleRoutes,
-			int selectedRouteIndex) {
+	public NewRide(String requester, String source, String destination, Date timeOfTrip, List<Route> selectedRoute) {
 		super();
 		this.requester = requester;
 		this.source = source;
 		this.destination = destination;
 		this.timeOfTrip = timeOfTrip;
-		this.possibleRoutes = possibleRoutes;
-		this.selectedRouteIndex = selectedRouteIndex;
+		this.selectedRoute = selectedRoute;
 	}
 
 	public String getRequester() {
@@ -56,15 +61,11 @@ public class NewRide {
 		return timeOfTrip;
 	}
 
-	public List<Route> getPossibleRoutes() {
-		return possibleRoutes;
-	}
-
 	/**
-	 * @return the selectedRouteIndex
+	 * @return the selectedRoute
 	 */
-	public int getSelectedRouteIndex() {
-		return selectedRouteIndex;
+	public List<Route> getSelectedRoute() {
+		return selectedRoute;
 	}
 
 }
