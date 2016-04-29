@@ -70,7 +70,7 @@ public class MapServiceImpl implements MapService {
 		return listroutes;
 	}
 
-	// find unique waypoints
+	// find unique waypoints for each route
 	// @param: steps from each route found from Google Map Api
 	public List<LatLng> findUniqueWaypoints(DirectionsStep[] step) throws Exception {
 		List<LatLng> uniqueWaypoints = new ArrayList<LatLng>();
