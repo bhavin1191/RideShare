@@ -6,7 +6,6 @@ package edu.nyu.cloud.beans;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.Distance;
 import com.google.maps.model.Duration;
 import com.google.maps.model.LatLng;
