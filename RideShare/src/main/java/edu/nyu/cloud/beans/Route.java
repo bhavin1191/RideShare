@@ -3,6 +3,7 @@
  */
 package edu.nyu.cloud.beans;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +17,12 @@ import com.google.maps.model.Duration;
  * @author rahulkhanna
  * Date:05-Apr-2016
  */
-public class Route 
+public class Route implements Serializable 
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1188434524626095499L;
 	private List<String> address;
 	private Distance distance;
 	private Duration timetaken;

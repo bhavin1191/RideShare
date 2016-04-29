@@ -18,9 +18,8 @@ public class NewRide implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	/**
-	 * 
-	 */
+
+	private long id;
 	private final String requester;
 	private final String source;
 	private final String destination;
@@ -66,6 +65,21 @@ public class NewRide implements Serializable {
 	 */
 	public List<Route> getSelectedRoute() {
 		return selectedRoute;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id
+	 *            the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
 	}
 
 }
