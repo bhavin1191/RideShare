@@ -89,7 +89,7 @@ public class RideShareController {
 			@RequestBody IncomingPoolRequest newPoolRequestToSearchRoutes) {
 		List<Route> routes = routeCache.getRoutesForGivenSourceAndDestination(newPoolRequestToSearchRoutes.getSource(),
 				newPoolRequestToSearchRoutes.getDestination());
-		if (routes == null) {
+		if (routes == null || routes.size() ==0) {
 			routes = beanFactory.getMapService().fetchPossibleRoutes(newPoolRequestToSearchRoutes.getSource(),
 					newPoolRequestToSearchRoutes.getDestination());
 			routeCache.addRoutesToCache(newPoolRequestToSearchRoutes.getSource(),
