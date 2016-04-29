@@ -17,10 +17,15 @@ import com.google.maps.model.LatLng;
  * @author rahulkhanna Date:05-Apr-2016
  */
 public class Route {
+
 	private List<String> address;
 	private Distance distance;
 	private Duration timetaken;
 	private List<LatLng> latlng;
+
+	public Route() {
+		address = new ArrayList<String>();
+	}
 
 	/**
 	 * @return the latlng
@@ -35,10 +40,6 @@ public class Route {
 	 */
 	public void setLatlng(List<LatLng> latlng) {
 		this.latlng = latlng;
-	}
-
-	public Route() {
-		address = new ArrayList<String>();
 	}
 
 	/**
