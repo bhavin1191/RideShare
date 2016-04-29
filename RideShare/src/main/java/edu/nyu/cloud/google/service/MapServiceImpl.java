@@ -19,23 +19,23 @@ import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsRoute;
+import com.google.maps.model.DirectionsStep;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.TravelMode;
 //import com.uber.sdk.rides.client.Response;
 
 import edu.nyu.cloud.beans.Route;
-import edu.nyu.cloud.cache.Cache;
 
 /**
  * @author rahulkhanna Date:05-Apr-2016
- * @author bhavinmehta Date:16-Apr-2016 [Updated]
+ * @author bhavinmehta Date:26-Apr-2016 [Updated]
  */
 public class MapServiceImpl implements MapService {
 
 	private static final String HTTP_GET_URL = "http://maps.google.com/maps/api/geocode/json?latlng=";
 	private final GeoApiContext context;
 
-	public MapServiceImpl(Cache applicationCache) {
+	public MapServiceImpl() {
 		this.context = new GeoApiContext().setApiKey("AIzaSyC1wCCjfNFeVQzMk5wKPb4KSXngr6TSVtY");
 	}
 
@@ -50,18 +50,39 @@ public class MapServiceImpl implements MapService {
 			requestd.alternatives(true).optimizeWaypoints(true);
 			DirectionsRoute[] getroutes = requestd.await();
 			for (DirectionsRoute directions : getroutes) {
-				List<LatLng> list = directions.overviewPolyline.decodePath();
-				Route newroute = new Route();
-				Route currentRoute = getAddressableRoutes(list, newroute);
+				List<LatLng> latlngofeachpath = directions.overviewPolyline.decodePath();
 				DirectionsLeg[] leg = directions.legs;
+
+				DirectionsStep[] step = leg[0].steps;
+
+				List<LatLng> uniqueWaypoints = findUniqueWaypoints(step);
+
+				Route newroute = new Route();
+				Route currentRoute = getAddressableRoutes(uniqueWaypoints, newroute);
 				currentRoute.setDistance(leg[0].distance);
 				currentRoute.setTimetaken(leg[0].durationInTraffic);
+				currentRoute.setLatlng(latlngofeachpath);
 				listroutes.add(currentRoute);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return listroutes;
+	}
+
+	// find unique waypoints
+	// @param: steps from each route found from Google Map Api
+	public List<LatLng> findUniqueWaypoints(DirectionsStep[] step) throws Exception {
+		List<LatLng> uniqueWaypoints = new ArrayList<LatLng>();
+		LatLng current = new LatLng(0.0, 0.0);
+		for (DirectionsStep waypoints : step) {
+			if (!current.toString().equals(waypoints.startLocation.toString())) {
+				uniqueWaypoints.add(waypoints.startLocation);
+			}
+			uniqueWaypoints.add(waypoints.endLocation);
+			current = waypoints.endLocation;
+		}
+		return uniqueWaypoints;
 	}
 
 	private Route getAddressableRoutes(List<LatLng> list, Route newroute) {
@@ -82,8 +103,8 @@ public class MapServiceImpl implements MapService {
 				if (previousLocation.equalsIgnoreCase(location)) {
 					previousLocation = location;
 				} else {
-					// System.out.println("Route "+pathcount+"-> Street
-					// Address:" + location_string);
+					// System.out.println("Route -> Street Address:" +
+					// location);
 					newroute.addRouteToList(location);
 					previousLocation = location;
 				}
@@ -125,4 +146,5 @@ public class MapServiceImpl implements MapService {
 		}
 		return result;
 	}
+
 }
