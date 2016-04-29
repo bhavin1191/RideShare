@@ -3,6 +3,7 @@
  */
 package edu.nyu.cloud.beans;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,8 +11,9 @@ import java.util.List;
  * 
  * @author rahulkhanna Date:05-Apr-2016
  */
-public class Route {
+public class Route implements Serializable{
 
+	private static final long serialVersionUID = 3571130958082192755L;
 	private final List<String> address;
 	private final SerializableDistance distance;
 	private final SerializableDuration timetaken;
