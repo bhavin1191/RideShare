@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import edu.nyu.cloud.beans.Route;
 import edu.nyu.cloud.beans.UserProfile;
 import edu.nyu.cloud.beans.factory.BeanFactory;
-import edu.nyu.cloud.cache.Cache;
+import edu.nyu.cloud.cache.RouteCache;
 import edu.nyu.cloud.service.beans.IncomingPoolRequest;
 import edu.nyu.cloud.service.beans.NewRideSharingRequest;
 import edu.nyu.cloud.user.dao.db.UserDao;
@@ -31,24 +31,25 @@ import edu.nyu.cloud.user.dao.db.UserDao;
 public class RideShareController {
 
 	private static final Logger LOG = (Logger) Logger.getLogger(RideShareController.class.getName());
-	
+
 	private final UserDao userDao;
 	private final BeanFactory beanFactory;
-	private final Cache applicationCache;
+	private final RouteCache routeCache;
 
-	public RideShareController(){
-		this(null,null,null);
+	public RideShareController() {
+		this(null, null, null);
 	}
-	
+
 	/**
 	 * Constructor
-	 * @param applicationCache 
+	 * 
+	 * @param routeCache
 	 * 
 	 * @param rideCreator
 	 */
-	public RideShareController(BeanFactory beanFactory, UserDao userDao, Cache applicationCache) {
+	public RideShareController(BeanFactory beanFactory, UserDao userDao, RouteCache routeCache) {
 		super();
-		this.applicationCache = applicationCache;
+		this.routeCache = routeCache;
 		this.beanFactory = beanFactory;
 		this.userDao = userDao;
 	}
@@ -73,7 +74,7 @@ public class RideShareController {
 	public void registerNewUser(@RequestBody(required = false) UserProfile newUserData) {
 		LOG.info("incoming new userId = " + newUserData.getFirstName());
 		System.out.println("incoming new userId = " + newUserData.getFirstName());
-		//userDao.persistUserProfie(newUserData);
+		getUserDao().persistUserProfie(newUserData);
 	}
 
 	/**
@@ -86,11 +87,15 @@ public class RideShareController {
 	@RequestMapping(value = "/searchRoutesForNewCarPoolRequest", method = { RequestMethod.POST, RequestMethod.GET })
 	public ResponseEntity<List<Route>> fetchRoutesForNewRideRegistration(
 			@RequestBody IncomingPoolRequest newPoolRequestToSearchRoutes) {
-		List<Route> routes = applicationCache.getRoutes(newPoolRequestToSearchRoutes.getSource(), newPoolRequestToSearchRoutes.getDestination());
-		if(routes == null){
+		List<Route> routes = routeCache.getRoutesForGivenSourceAndDestination(newPoolRequestToSearchRoutes.getSource(),
+				newPoolRequestToSearchRoutes.getDestination());
+		if (routes == null) {
 			routes = beanFactory.getMapService().fetchPossibleRoutes(newPoolRequestToSearchRoutes.getSource(),
 					newPoolRequestToSearchRoutes.getDestination());
-			applicationCache.addRoutesToCache(newPoolRequestToSearchRoutes.getSource(), newPoolRequestToSearchRoutes.getDestination(), routes);
+			routeCache.addRoutesToCache(newPoolRequestToSearchRoutes.getSource(),
+					newPoolRequestToSearchRoutes.getDestination(), routes);
+		}else{//TODO: remove this else block.
+			LOG.info("num of routes from cache = "+routes.size());
 		}
 		return new ResponseEntity<List<Route>>(routes, HttpStatus.FOUND);
 	}
@@ -104,6 +109,13 @@ public class RideShareController {
 	@RequestMapping(value = "/searchCarForPooling", method = { RequestMethod.POST, RequestMethod.GET })
 	public void searchNewRideToShare(@RequestBody NewRideSharingRequest newRideRequest) {
 		// TODO:
+	}
+
+	/**
+	 * @return the userDao
+	 */
+	public UserDao getUserDao() {
+		return userDao;
 	}
 
 }
