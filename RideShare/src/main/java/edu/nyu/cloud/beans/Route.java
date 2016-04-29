@@ -3,12 +3,7 @@
  */
 package edu.nyu.cloud.beans;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import com.google.maps.model.Distance;
-import com.google.maps.model.Duration;
-import com.google.maps.model.LatLng;
 
 /**
  * This class is used to represents a route between a source and destination.
@@ -17,66 +12,51 @@ import com.google.maps.model.LatLng;
  */
 public class Route {
 
-	private List<String> address;
-	private Distance distance;
-	private Duration timetaken;
-	private List<LatLng> latlng;
-
-	public Route() {
-		address = new ArrayList<String>();
-	}
+	private final List<String> address;
+	private final SerializableDistance distance;
+	private final SerializableDuration timetaken;
+	private final List<SerializableLatLng> latlng;
 
 	/**
-	 * @return the latlng
-	 */
-	public List<LatLng> getLatlng() {
-		return latlng;
-	}
-
-	/**
-	 * @param latlng
-	 *            the latlng to set
-	 */
-	public void setLatlng(List<LatLng> latlng) {
-		this.latlng = latlng;
-	}
-
-	/**
-	 * @return the distance
-	 */
-	public Distance getDistance() {
-		return distance;
-	}
-
-	/**
+	 * @param address
 	 * @param distance
-	 *            the distance to set
+	 * @param timetaken
+	 * @param latlng
 	 */
-	public void setDistance(Distance distance) {
+	public Route(List<String> address, SerializableDistance distance, SerializableDuration timetaken,
+			List<SerializableLatLng> latlng) {
+		super();
+		this.address = address;
 		this.distance = distance;
+		this.timetaken = timetaken;
+		this.latlng = latlng;
 	}
 
 	/**
 	 * @return the timetaken
 	 */
-	public Duration getTimetaken() {
+	public SerializableDuration getTimetaken() {
 		return timetaken;
 	}
 
 	/**
-	 * @param timetaken
-	 *            the timetaken to set
+	 * @return the latlng
 	 */
-	public void setTimetaken(Duration timetaken) {
-		this.timetaken = timetaken;
+	public List<SerializableLatLng> getLatlng() {
+		return latlng;
 	}
 
-	public void addRouteToList(String formattedaddress) {
-		this.address.add(formattedaddress);
-
+	/**
+	 * @return the distance
+	 */
+	public SerializableDistance getDistance() {
+		return distance;
 	}
 
-	public List<String> getLegs() {
+	/**
+	 * @return the address
+	 */
+	public List<String> getAddress() {
 		return address;
 	}
 

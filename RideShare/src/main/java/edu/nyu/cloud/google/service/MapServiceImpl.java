@@ -25,6 +25,9 @@ import com.google.maps.model.TravelMode;
 //import com.uber.sdk.rides.client.Response;
 
 import edu.nyu.cloud.beans.Route;
+import edu.nyu.cloud.beans.SerializableDistance;
+import edu.nyu.cloud.beans.SerializableDuration;
+import edu.nyu.cloud.beans.SerializableLatLng;
 
 /**
  * @author rahulkhanna Date:05-Apr-2016
@@ -56,13 +59,16 @@ public class MapServiceImpl implements MapService {
 				DirectionsStep[] step = leg[0].steps;
 
 				List<LatLng> uniqueWaypoints = findUniqueWaypoints(step);
-
-				Route newroute = new Route();
-				Route currentRoute = getAddressableRoutes(uniqueWaypoints, newroute);
-				currentRoute.setDistance(leg[0].distance);
-				currentRoute.setTimetaken(leg[0].durationInTraffic);
-				currentRoute.setLatlng(latlngofeachpath);
-				listroutes.add(currentRoute);
+				SerializableDistance distance = new SerializableDistance(leg[0].distance);
+				SerializableDuration duration = new SerializableDuration(leg[0].duration);
+				List<SerializableLatLng> latLngs = new ArrayList<>(latlngofeachpath.size());
+				for (LatLng val : latlngofeachpath) {
+					SerializableLatLng ladLng = new SerializableLatLng(val.lat, val.lng);
+					latLngs.add(ladLng);
+				}
+				List<String> addresses = getAddressableRoutes(uniqueWaypoints);
+				Route newroute = new Route(addresses, distance, duration, latLngs);
+				listroutes.add(newroute);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,13 +91,14 @@ public class MapServiceImpl implements MapService {
 		return uniqueWaypoints;
 	}
 
-	private Route getAddressableRoutes(List<LatLng> list, Route newroute) {
+	private List<String> getAddressableRoutes(List<LatLng> latLngs) {
 		JSONObject locationInJson = null;
 		String location = null;
 		String previousLocation = "";
+		List<String> addresses = new ArrayList<>(latLngs.size());
 		try {
-			for (int i = 0; i < list.size(); i++) {
-				String result = getLocationInfo(list.get(i).toString());
+			for (int i = 0; i < latLngs.size(); i++) {
+				String result = getLocationInfo(latLngs.get(i).toString());
 				JSONObject resultInJson = new JSONObject(result);
 				// Get JSON Array called "results" and then get the 0th
 				// complete object as JSON
@@ -105,14 +112,14 @@ public class MapServiceImpl implements MapService {
 				} else {
 					// System.out.println("Route -> Street Address:" +
 					// location);
-					newroute.addRouteToList(location);
+					addresses.add(location);
 					previousLocation = location;
 				}
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-		return newroute;
+		return addresses;
 	}
 
 	/**
