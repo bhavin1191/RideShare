@@ -8,7 +8,7 @@ package edu.nyu.cloud.beans;
  */
 public class UserProfile {
 
-	private int id;
+	private long id;
 	private String userName;
 	private String userPassword;
 	private String userAddress;
@@ -20,7 +20,7 @@ public class UserProfile {
 	private int numberOfThumbsUp;
 	private int numberOfThumbsDown;
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -147,7 +147,7 @@ public class UserProfile {
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
