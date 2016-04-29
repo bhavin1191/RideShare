@@ -37,9 +37,11 @@ public class MapServiceImpl implements MapService {
 
 	private static final String HTTP_GET_URL = "http://maps.google.com/maps/api/geocode/json?latlng=";
 	private final GeoApiContext context;
-
+	private CloseableHttpClient client = null;
+	
 	public MapServiceImpl() {
 		this.context = new GeoApiContext().setApiKey("AIzaSyC1wCCjfNFeVQzMk5wKPb4KSXngr6TSVtY");
+		client = HttpClientBuilder.create().build();
 	}
 
 	// fetch Route Type Object with list of waypoints or legs address, distance
@@ -133,7 +135,6 @@ public class MapServiceImpl implements MapService {
 	private String getLocationInfo(String latlng) throws IOException {
 		String result = null;
 		HttpGet httpGet = new HttpGet(HTTP_GET_URL + latlng);
-		CloseableHttpClient client = HttpClientBuilder.create().build();
 		HttpResponse response;
 		try {
 			response = client.execute(httpGet);
