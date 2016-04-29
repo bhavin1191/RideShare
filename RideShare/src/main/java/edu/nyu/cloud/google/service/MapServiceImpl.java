@@ -37,7 +37,7 @@ public class MapServiceImpl implements MapService {
 
 	private static final String HTTP_GET_URL = "http://maps.google.com/maps/api/geocode/json?latlng=";
 	private final GeoApiContext context;
-	private CloseableHttpClient client = null;
+	private final CloseableHttpClient client;
 	
 	public MapServiceImpl() {
 		this.context = new GeoApiContext().setApiKey("AIzaSyC1wCCjfNFeVQzMk5wKPb4KSXngr6TSVtY");
