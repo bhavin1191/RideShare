@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="edu.nyu.cloud.beans.UserProfile">
+	<class name="edu.nyu.cloud.beans.UserProfile" table="USER_PROFILE" entity-name="userProfile">
 		<id name="id" column="id" />
 		<property name="userName" column="USER_NAME" type="java.lang.String" />
 		<property name="userPassword" column="USER_PASSWORD" type="java.lang.String" />
@@ -11,5 +11,4 @@
 		<property name="lastName" column="LAST_NAME" type="java.lang.String" />
 		<property name="phoneNumber" column="PHONE_NUMBER" type="java.lang.String" />
 	</class>
-
 </hibernate-mapping>
