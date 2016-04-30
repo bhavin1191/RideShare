@@ -31,7 +31,7 @@ public class NewRideCreator {
 	}
 
 	public void createNewRideForPool(IncomingPoolRequest newPoolRequest) {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date date;
 		try {
 			date = format.parse(newPoolRequest.getDate());
