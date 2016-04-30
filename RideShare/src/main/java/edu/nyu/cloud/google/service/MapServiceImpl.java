@@ -40,7 +40,7 @@ public class MapServiceImpl implements MapService {
 	private final CloseableHttpClient client;
 	
 	public MapServiceImpl() {
-		this.context = new GeoApiContext().setApiKey("AIzaSyC1wCCjfNFeVQzMk5wKPb4KSXngr6TSVtY");
+		this.context = new GeoApiContext().setApiKey("AIzaSyC_xRB8quFF-9SM2bxokO9KekSyoRsqZsE");
 		client = HttpClientBuilder.create().build();
 	}
 
@@ -119,7 +119,7 @@ public class MapServiceImpl implements MapService {
 				}
 			}
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			//throw new RuntimeException(e);
 		}
 		return addresses;
 	}
@@ -149,8 +149,8 @@ public class MapServiceImpl implements MapService {
 			result = sb.toString();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
-		} finally {
-			client.close();
+		}finally{
+			httpGet.releaseConnection();
 		}
 		return result;
 	}
