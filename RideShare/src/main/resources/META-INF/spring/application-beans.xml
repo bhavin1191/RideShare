@@ -12,7 +12,6 @@
     http://www.springframework.org/schema/tx/spring-tx.xsd
     http://www.springframework.org/schema/jdbc 
 	http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd">
-	<context:property-placeholder location="classpath:rideshare.properties" />
 
 
 	<bean id="rideShareController" class="edu.nyu.cloud.service.controller.RideShareController">

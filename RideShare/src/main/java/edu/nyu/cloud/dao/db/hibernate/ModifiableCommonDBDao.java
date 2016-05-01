@@ -11,6 +11,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import edu.nyu.cloud.dao.db.BaseModifiableDao;
 import edu.nyu.cloud.dao.db.IDGenerator;
@@ -20,6 +22,8 @@ import edu.nyu.cloud.dao.db.IDGenerator;
  * @param <T>
  * @param <E>
  */
+
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class ModifiableCommonDBDao<T, E> extends CommonDBDao<T, E> implements BaseModifiableDao<T, E> {
 
 	private final String entityName;
@@ -45,7 +49,7 @@ public class ModifiableCommonDBDao<T, E> extends CommonDBDao<T, E> implements Ba
 	@Override
 	public void initialize() {
 		if (idGenerator != null) {
-			Long result = initializeIdgeneratorWithGivenFieldsName(idGenerator, "key");
+			Long result = initializeIdgeneratorWithGivenFieldsName(idGenerator, "id");
 			LOG.info("Initialized " + idGenerator.getEntityName() + " entity with id :" + result);
 		}
 	}
@@ -81,7 +85,7 @@ public class ModifiableCommonDBDao<T, E> extends CommonDBDao<T, E> implements Ba
 
 	@Override
 	public void save(T object) {
-		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -98,13 +102,13 @@ public class ModifiableCommonDBDao<T, E> extends CommonDBDao<T, E> implements Ba
 
 	@Override
 	public void update(T object) {
-		// TODO Auto-generated method stub
+		getSession().update(object);
 
 	}
 
 	@Override
 	public void merge(T object) {
-		// TODO Auto-generated method stub
+		getSession().merge(object);
 
 	}
 

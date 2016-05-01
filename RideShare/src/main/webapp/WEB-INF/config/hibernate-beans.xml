@@ -11,14 +11,25 @@
     http://www.springframework.org/schema/tx/spring-tx.xsd">
 	<tx:annotation-driven />
 	
-	<bean id = "newRideDao" class="edu.nyu.cloud.newride.dao.db.hibernate.NewRideDaoImpl"/>
-	
-	<bean id= "userDao" class="edu.nyu.cloud.user.dao.db.hibernate.UserDaoImpl">
+	<bean id = "newRideDao" class="edu.nyu.cloud.newride.dao.db.hibernate.NewRideDaoImpl" >
 		<constructor-arg index="0" ref="sessionFactory"/>
-		<constructor-arg index="1" value="userProfile"/>
-		<constructor-arg index="2"><null/></constructor-arg>
+		<constructor-arg index="1" value="newRide"/>
+		<constructor-arg index="2" ref="newRideIdGenerator"/>
 	</bean>
 	
+	<bean id= "userDao" class="edu.nyu.cloud.user.dao.db.hibernate.UserDaoImpl" init-method="initialize">
+		<constructor-arg index="0" ref="sessionFactory"/>
+		<constructor-arg index="1" value="userProfile"/>
+		<constructor-arg index="2" ref="userProfileIdGenerator"/>
+	</bean>
+	
+	<bean id = "newRideIdGenerator" class = "edu.nyu.cloud.dao.db.hibernate.UniqueIdGenerator" >
+		<constructor-arg index="0" value="newRide"/>
+	</bean>
+	
+	<bean id = "userProfileIdGenerator" class = "edu.nyu.cloud.dao.db.hibernate.UniqueIdGenerator" >
+		<constructor-arg index="0" value="userProfile"/>
+	</bean>
 
 
 </beans>
