@@ -97,7 +97,7 @@ public class RideShareController {
 		}else{//TODO: remove this else block.
 			LOG.info("num of routes from cache = "+routes.size());
 		}
-		return new ResponseEntity<List<Route>>(routes, HttpStatus.FOUND);
+		return new ResponseEntity<List<Route>>(routes, HttpStatus.OK);
 	}
 
 	/**
