@@ -16,7 +16,7 @@ public class IncomingPoolRequest {
 	private final String source;
 	private final String date;
 	private final String userId;
-	private final List<Route> selectRoute;
+	private final Route selectRoute;
 
 	public IncomingPoolRequest(){
 		this(0,null,null,null,null,null);
@@ -29,7 +29,7 @@ public class IncomingPoolRequest {
 	 * @param date
 	 * @param userId
 	 */
-	public IncomingPoolRequest(int numberOfPassengers, String destination, String source, String date, String userId,List<Route> selectRoute) {
+	public IncomingPoolRequest(int numberOfPassengers, String destination, String source, String date, String userId,Route selectRoute) {
 		super();
 		this.numberOfPassengers = numberOfPassengers;
 		this.destination = destination;
@@ -62,7 +62,7 @@ public class IncomingPoolRequest {
 	/**
 	 * @return the selectRoute
 	 */
-	public List<Route> getSelectRoute() {
+	public Route getSelectRoute() {
 		return selectRoute;
 	}
 

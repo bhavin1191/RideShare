@@ -24,7 +24,7 @@ public class NewRide implements Serializable {
 	private final String source;
 	private final String destination;
 	private final Date timeOfTrip;
-	private final List<Route> selectedRoute;
+	private final Route selectedRoute;
 
 	/**
 	 * Constructor
@@ -35,7 +35,7 @@ public class NewRide implements Serializable {
 	 * @param timeOfTrip
 	 * @param possibleRoutes
 	 */
-	public NewRide(String requester, String source, String destination, Date timeOfTrip, List<Route> selectedRoute) {
+	public NewRide(String requester, String source, String destination, Date timeOfTrip, Route selectedRoute) {
 		super();
 		this.requester = requester;
 		this.source = source;
@@ -63,7 +63,7 @@ public class NewRide implements Serializable {
 	/**
 	 * @return the selectedRoute
 	 */
-	public List<Route> getSelectedRoute() {
+	public Route getSelectedRoute() {
 		return selectedRoute;
 	}
 
