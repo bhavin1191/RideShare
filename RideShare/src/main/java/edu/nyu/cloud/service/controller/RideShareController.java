@@ -3,7 +3,7 @@
  */
 package edu.nyu.cloud.service.controller;
 
-import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -85,9 +85,9 @@ public class RideShareController {
 	 *         user defining the route which will be followed by the cab driver.
 	 */
 	@RequestMapping(value = "/searchRoutesForNewCarPoolRequest", method = { RequestMethod.POST, RequestMethod.GET })
-	public ResponseEntity<List<Route>> fetchRoutesForNewRideRegistration(
+	public ResponseEntity<Set<Route>> fetchRoutesForNewRideRegistration(
 			@RequestBody IncomingPoolRequest newPoolRequestToSearchRoutes) {
-		List<Route> routes = routeCache.getRoutesForGivenSourceAndDestination(newPoolRequestToSearchRoutes.getSource(),
+		Set<Route> routes = routeCache.getRoutesForGivenSourceAndDestination(newPoolRequestToSearchRoutes.getSource(),
 				newPoolRequestToSearchRoutes.getDestination());
 		if (routes == null || routes.isEmpty() ) {
 			routes = beanFactory.getMapService().fetchPossibleRoutes(newPoolRequestToSearchRoutes.getSource(),
@@ -97,7 +97,7 @@ public class RideShareController {
 		}else{//TODO: remove this else block.
 			LOG.info("num of routes from cache = "+routes.size());
 		}
-		return new ResponseEntity<List<Route>>(routes, HttpStatus.OK);
+		return new ResponseEntity<Set<Route>>(routes, HttpStatus.OK);
 	}
 
 	/**
