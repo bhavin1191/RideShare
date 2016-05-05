@@ -85,7 +85,7 @@ public class ModifiableCommonDBDao<T, E> extends CommonDBDao<T, E> implements Ba
 
 	@Override
 	public void save(T object) {
-		
+		getSession().save(object);
 	}
 
 	@Override
