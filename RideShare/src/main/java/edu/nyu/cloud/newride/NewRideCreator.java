@@ -41,6 +41,10 @@ public class NewRideCreator {
 		NewRide ride = new NewRide(newPoolRequest.getUserId(), newPoolRequest.getSource(),
 				newPoolRequest.getDestination(), date, newPoolRequest.getSelectRoute());
 		dao.saveNewRide(ride);
+		if(newPoolRequest.getCarType() == "Uber"){
+			
+		}
+		
 	}
 
 }
