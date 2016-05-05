@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -28,6 +30,7 @@ import edu.nyu.cloud.beans.Route;
 import edu.nyu.cloud.beans.SerializableDistance;
 import edu.nyu.cloud.beans.SerializableDuration;
 import edu.nyu.cloud.beans.SerializableLatLng;
+import edu.nyu.cloud.dao.db.IDGenerator;
 
 /**
  * @author rahulkhanna Date:05-Apr-2016
@@ -38,17 +41,21 @@ public class MapServiceImpl implements MapService {
 	private static final String HTTP_GET_URL = "http://maps.google.com/maps/api/geocode/json?latlng=";
 	private final GeoApiContext context;
 	private final CloseableHttpClient client;
+	private final IDGenerator routeIdGenerator=null;
+	private final IDGenerator latlngIdGenerator;
 	
-	public MapServiceImpl() {
+	public MapServiceImpl(IDGenerator latlngIdGenerator) {
 		this.context = new GeoApiContext().setApiKey("AIzaSyC_xRB8quFF-9SM2bxokO9KekSyoRsqZsE");
 		client = HttpClientBuilder.create().build();
+		//this.routeIdGenerator =routeIdGenerator;
+		this.latlngIdGenerator = latlngIdGenerator;
 	}
 
 	// fetch Route Type Object with list of waypoints or legs address, distance
 	// and duration in traffic.
 	@Override
-	public List<Route> fetchPossibleRoutes(String source, String destination) {
-		List<Route> listroutes = new ArrayList<Route>();
+	public Set<Route> fetchPossibleRoutes(String source, String destination) {
+		Set<Route> listroutes = new HashSet<Route>();
 		try {
 			DirectionsApiRequest requestd = DirectionsApi.getDirections(context, source, destination);
 			requestd.mode(TravelMode.DRIVING);
@@ -61,16 +68,17 @@ public class MapServiceImpl implements MapService {
 				DirectionsStep[] step = leg[0].steps;
 
 				List<LatLng> uniqueWaypoints = findUniqueWaypoints(step);
-				SerializableDistance distance = new SerializableDistance(leg[0].distance);
-				SerializableDuration duration = new SerializableDuration(leg[0].duration);
-				List<SerializableLatLng> latLngs = new ArrayList<>(latlngofeachpath.size());
-				for (LatLng val : latlngofeachpath) {
-					SerializableLatLng ladLng = new SerializableLatLng(val.lat, val.lng);
-					latLngs.add(ladLng);
-				}
+				SerializableDistance distance = new SerializableDistance(leg[0].distance.inMeters,leg[0].distance.humanReadable);
+				SerializableDuration duration = new SerializableDuration(leg[0].duration.inSeconds,leg[0].duration.humanReadable);
+				Set<SerializableLatLng> latLngs = new HashSet<>(latlngofeachpath.size());
 				List<String> addresses = getAddressableRoutes(uniqueWaypoints);
-				Route newroute = new Route(addresses, distance, duration, latLngs);
-				listroutes.add(newroute);
+				Route newRoute = new Route(0l,addresses, distance, duration, latLngs);
+				for (LatLng val : latlngofeachpath) {
+					SerializableLatLng latLng = new SerializableLatLng(val.lat, val.lng,newRoute);
+					latLng.setId(latlngIdGenerator.getNewId());
+					latLngs.add(latLng);
+				}
+				listroutes.add(newRoute);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -153,6 +161,14 @@ public class MapServiceImpl implements MapService {
 			httpGet.releaseConnection();
 		}
 		return result;
+	}
+
+	public IDGenerator getRouteIdGenerator() {
+		return routeIdGenerator;
+	}
+
+	public IDGenerator getLatlngIdGenerator() {
+		return latlngIdGenerator;
 	}
 
 }
