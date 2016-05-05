@@ -21,18 +21,22 @@ public class SerializableDistance implements Serializable {
 	 * used only in algorithmic situations, e.g. sorting results by some user
 	 * specified metric.
 	 */
-	private final long inMeters;
+	private long inMeters;
 
 	/**
 	 * This is the human friendly distance. This is rounded and in an
 	 * appropriate unit for the request. The units can be overriden with a
 	 * request parameter.
 	 */
-	private final String humanReadable;
+	private String humanReadable;
 
-	public SerializableDistance(Distance distance) {
-		this.inMeters = distance.inMeters;
-		this.humanReadable = distance.humanReadable;
+	public SerializableDistance(){
+		this(0L,null);
+	}
+	
+	public SerializableDistance(long inMeters, String humanReadable) {
+		this.inMeters = inMeters;
+		this.humanReadable = humanReadable;
 	}
 
 	@Override
@@ -46,5 +50,18 @@ public class SerializableDistance implements Serializable {
 	public long getInMeters() {
 		return inMeters;
 	}
+
+	public String getHumanReadable() {
+		return humanReadable;
+	}
+
+	public void setHumanReadable(String humanReadable) {
+		this.humanReadable = humanReadable;
+	}
+
+	public void setInMeters(long inMeters) {
+		this.inMeters = inMeters;
+	}
+	
 
 }
