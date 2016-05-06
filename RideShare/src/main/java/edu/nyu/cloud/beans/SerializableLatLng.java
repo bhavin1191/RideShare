@@ -32,15 +32,15 @@ public class SerializableLatLng implements Serializable {
 	private double lng;
 	
 	@JsonIgnore
-	private Route route;
+	private long routeId;
 
 	/**
 	 * Construct a location with a latitude longitude pair.
 	 */
-	public SerializableLatLng(double lat, double lng,Route route) {
+	public SerializableLatLng(double lat, double lng,long route) {
 		this.lat = lat;
 		this.lng = lng;
-		this.route = route;
+		this.routeId = route;
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class SerializableLatLng implements Serializable {
 	}
 
 	public SerializableLatLng() {
-		this(0D,0D,null);
+		this(0D,0D,0l);
 	}
 
 	public void setLat(Double lat) {
@@ -77,12 +77,12 @@ public class SerializableLatLng implements Serializable {
 		this.lng = lng;
 	}
 
-	public Route getRoute() {
-		return route;
+	public long getRouteId() {
+		return routeId;
 	}
 
-	public void setRoute(Route route) {
-		this.route = route;
+	public void setRouteId(long routeId) {
+		this.routeId = routeId;
 	}
 	
 	

@@ -2,45 +2,40 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="edu.nyu.cloud.beans.NewRide" table="Ride"
-		entity-name="ride">
+	<class name="edu.nyu.cloud.beans.NewRide" table="ride" entity-name="ride">
 		<id name="id" column="id" />
 		<property name="requester" column="USER_NAME" type="java.lang.String" />
 		<property name="source" column="source" type="java.lang.String" />
 		<property name="destination" column="destination" type="java.lang.String" />
 		<property name="timeOfTrip" column="timeOfTrip" type="java.sql.Date" />
-		<many-to-one name="selectedRoute" column="route_id"
-			cascade="persist" fetch="join" class="edu.nyu.cloud.beans.Route"
-			not-null="true">
+		<many-to-one name="selectedRoute" column="r_id"
+			cascade="persist" fetch="join" entity-name="route" not-null="true">
 		</many-to-one>
 	</class>
 
-	<class name="edu.nyu.cloud.beans.Route" table="route">
-		<id name="id" type="long" column="route_id">
-			<generator class="identity" />
-		</id>
+	<class name="edu.nyu.cloud.beans.Route" table="route"
+		entity-name="route">
+		<id name="id" type="long" column="r_id" />
 		<component name="distance" class="edu.nyu.cloud.beans.SerializableDistance">
 			<property name="inMeters" column="distance" type="long" />
 		</component>
 		<component name="timetaken" class="edu.nyu.cloud.beans.SerializableDuration">
 			<property name="inSeconds" column="duration" type="long" />
 		</component>
-		<set name="latlng" lazy="false" fetch="select" inverse="true" table = "latlng" cascade="persist">
-			<key column="route_id" not-null="true" />
-			<one-to-many class="edu.nyu.cloud.beans.SerializableLatLng" entity-name="latlng"/>
+		<set name="latlng" inverse="true" cascade="persist" fetch="join"  table="latlng">
+			<key column="r_id"  not-null="true"/>
+			<one-to-many class="edu.nyu.cloud.beans.SerializableLatLng"
+				entity-name="latlng" />
 		</set>
 	</class>
 
-	<class name="edu.nyu.cloud.beans.SerializableLatLng" entity-name = "latlng">
+	<class name="edu.nyu.cloud.beans.SerializableLatLng" entity-name="latlng">
 		<id name="id" type="long" column="id">
-			<generator class="native" />
+			<generator class="identity" />
 		</id>
 		<property name="lat" type="double" column="lat" />
 		<property name="lng" type="double" column="lng" />
-		 <many-to-one name="route" class="edu.nyu.cloud.beans.Route" fetch="select">
-            <column name="route_id"  not-null="true" />
-        </many-to-one>
-
+		<property name="routeId" type="long" column = "r_id" not-null="true"/>
 	</class>
 
 </hibernate-mapping>
