@@ -6,6 +6,7 @@ package edu.nyu.cloud.beans;
 import java.io.Serializable;
 import java.util.Locale;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.maps.model.LatLng;
 
 /**
@@ -30,6 +31,7 @@ public class SerializableLatLng implements Serializable {
 	 */
 	private double lng;
 	
+	@JsonIgnore
 	private Route route;
 
 	/**
