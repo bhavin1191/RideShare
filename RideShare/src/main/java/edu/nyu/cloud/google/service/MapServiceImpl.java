@@ -41,13 +41,13 @@ public class MapServiceImpl implements MapService {
 	private static final String HTTP_GET_URL = "http://maps.google.com/maps/api/geocode/json?latlng=";
 	private final GeoApiContext context;
 	private final CloseableHttpClient client;
-	private final IDGenerator routeIdGenerator=null;
+	private final IDGenerator routeIdGenerator;
 	private final IDGenerator latlngIdGenerator;
 	
-	public MapServiceImpl(IDGenerator latlngIdGenerator) {
+	public MapServiceImpl(IDGenerator latlngIdGenerator, IDGenerator routeIdGenerator) {
 		this.context = new GeoApiContext().setApiKey("AIzaSyC_xRB8quFF-9SM2bxokO9KekSyoRsqZsE");
 		client = HttpClientBuilder.create().build();
-		//this.routeIdGenerator =routeIdGenerator;
+		this.routeIdGenerator =routeIdGenerator;
 		this.latlngIdGenerator = latlngIdGenerator;
 	}
 
@@ -64,17 +64,16 @@ public class MapServiceImpl implements MapService {
 			for (DirectionsRoute directions : getroutes) {
 				List<LatLng> latlngofeachpath = directions.overviewPolyline.decodePath();
 				DirectionsLeg[] leg = directions.legs;
-
 				DirectionsStep[] step = leg[0].steps;
-
 				List<LatLng> uniqueWaypoints = findUniqueWaypoints(step);
 				SerializableDistance distance = new SerializableDistance(leg[0].distance.inMeters,leg[0].distance.humanReadable);
 				SerializableDuration duration = new SerializableDuration(leg[0].duration.inSeconds,leg[0].duration.humanReadable);
 				Set<SerializableLatLng> latLngs = new HashSet<>(latlngofeachpath.size());
 				List<String> addresses = getAddressableRoutes(uniqueWaypoints);
 				Route newRoute = new Route(0l,addresses, distance, duration, latLngs);
+				
 				for (LatLng val : latlngofeachpath) {
-					SerializableLatLng latLng = new SerializableLatLng(val.lat, val.lng,newRoute);
+					SerializableLatLng latLng = new SerializableLatLng(val.lat, val.lng,0l);
 					latLng.setId(latlngIdGenerator.getNewId());
 					latLngs.add(latLng);
 				}

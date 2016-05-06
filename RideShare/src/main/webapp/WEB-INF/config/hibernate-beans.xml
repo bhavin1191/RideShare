@@ -26,13 +26,17 @@
 	<bean id = "routeDao" class="edu.nyu.cloud.route.dao.db.hibernate.RouteDaoImpl" init-method="initialize">
 		<constructor-arg index="0" ref="sessionFactory"/>
 		<constructor-arg index="1" value="route"/>
-		<constructor-arg index="2"><null/></constructor-arg>
+		<constructor-arg index="2" ref="routeIdGenerator"/>
 	</bean>
 	
 	<bean id = "latLngDao" class="edu.nyu.cloud.route.dao.db.hibernate.LatLngDaoImpl" init-method="initialize">
 		<constructor-arg index="0" ref="sessionFactory"/>
 		<constructor-arg index="1" value="latlng"/>
 		<constructor-arg index="2" ref="latlngIdGenerator"/>
+	</bean>
+	
+	<bean id = "routeIdGenerator" class = "edu.nyu.cloud.dao.db.hibernate.UniqueIdGenerator" >
+		<constructor-arg index="0" value="route"/>
 	</bean>
 	
 	<bean id = "newRideIdGenerator" class = "edu.nyu.cloud.dao.db.hibernate.UniqueIdGenerator" >

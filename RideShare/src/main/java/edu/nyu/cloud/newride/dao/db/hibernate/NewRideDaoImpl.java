@@ -23,6 +23,7 @@ public class NewRideDaoImpl extends ModifiableCommonDBDao<NewRide, NewRide> impl
 	@Override
 	public void saveNewRide(NewRide ride) {
 		ride.setId(getNextKey());
+		System.out.println(ride.getSelectedRoute().getId());
 		savePersistent(ride);
 	}
 

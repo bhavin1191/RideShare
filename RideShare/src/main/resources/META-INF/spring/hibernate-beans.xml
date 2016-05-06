@@ -11,12 +11,44 @@
     http://www.springframework.org/schema/tx/spring-tx.xsd">
 	<tx:annotation-driven />
 	
-	<bean id = "newRideDao" class="edu.nyu.cloud.newride.dao.db.hibernate.NewRideDaoImpl"/>
+	<bean id = "newRideDao" class="edu.nyu.cloud.newride.dao.db.hibernate.NewRideDaoImpl"  init-method="initialize">
+		<constructor-arg index="0" ref="sessionFactory"/>
+		<constructor-arg index="1" value="ride"/>
+		<constructor-arg index="2" ref="newRideIdGenerator"/>
+	</bean>
 	
-	<bean id= "userDao" class="edu.nyu.cloud.user.dao.db.hibernate.UserDaoImpl">
+	<bean id= "userDao" class="edu.nyu.cloud.user.dao.db.hibernate.UserDaoImpl" init-method="initialize">
 		<constructor-arg index="0" ref="sessionFactory"/>
 		<constructor-arg index="1" value="userProfile"/>
-		<constructor-arg index="2"><null/></constructor-arg>
+		<constructor-arg index="2" ref="userProfileIdGenerator"/>
+	</bean>
+	
+	<bean id = "routeDao" class="edu.nyu.cloud.route.dao.db.hibernate.RouteDaoImpl" init-method="initialize">
+		<constructor-arg index="0" ref="sessionFactory"/>
+		<constructor-arg index="1" value="route"/>
+		<constructor-arg index="2" ref="routeIdGenerator"/>
+	</bean>
+	
+	<bean id = "latLngDao" class="edu.nyu.cloud.route.dao.db.hibernate.LatLngDaoImpl" init-method="initialize">
+		<constructor-arg index="0" ref="sessionFactory"/>
+		<constructor-arg index="1" value="latlng"/>
+		<constructor-arg index="2" ref="latlngIdGenerator"/>
+	</bean>
+	
+	<bean id = "routeIdGenerator" class = "edu.nyu.cloud.dao.db.hibernate.UniqueIdGenerator" >
+		<constructor-arg index="0" value="route"/>
+	</bean>
+	
+	<bean id = "newRideIdGenerator" class = "edu.nyu.cloud.dao.db.hibernate.UniqueIdGenerator" >
+		<constructor-arg index="0" value="ride"/>
+	</bean>
+	
+	<bean id = "userProfileIdGenerator" class = "edu.nyu.cloud.dao.db.hibernate.UniqueIdGenerator" >
+		<constructor-arg index="0" value="userProfile"/>
+	</bean>
+	
+	<bean id = "latlngIdGenerator" class = "edu.nyu.cloud.dao.db.hibernate.UniqueIdGenerator">
+		<constructor-arg index="0" value="latlng"/>
 	</bean>
 	
 

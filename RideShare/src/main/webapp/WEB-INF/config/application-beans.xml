@@ -30,11 +30,12 @@
 
 	<bean id="rideCreator" class="edu.nyu.cloud.newride.NewRideCreator">
 		<constructor-arg index="0" ref="newRideDao" />
+		<constructor-arg index="1" ref="routeIdGenerator"/>
 	</bean>
 	
 	<bean id="mapService" class="edu.nyu.cloud.google.service.MapServiceImpl">
-		
 		<constructor-arg index="0" ref="latlngIdGenerator"/>
+		<constructor-arg index="1" ref="routeIdGenerator"/>
 	</bean>
 
 	<bean id="jedisConnectionFactory"
