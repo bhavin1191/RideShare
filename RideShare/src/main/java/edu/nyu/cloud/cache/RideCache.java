@@ -21,6 +21,8 @@ public interface RideCache {
 	
 	public List<NewRide> getActiveRidesNearToGivenCoordinates(LatLng latLng);
 	
+	public void addNewActiceRide(NewRide ride);
+	
 	public NewRide getRideByGivenRideId(long rideId);
 
 }

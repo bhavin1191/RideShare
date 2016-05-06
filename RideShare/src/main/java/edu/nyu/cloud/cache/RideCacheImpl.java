@@ -1,5 +1,6 @@
 package edu.nyu.cloud.cache;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,6 +52,21 @@ public class RideCacheImpl extends CacheImpl<Map<String,List<NewRide>>> implemen
 	@Override
 	public NewRide getRideByGivenRideId(long rideId) {
 		return null;
+	}
+	
+	@Override
+	public void addNewActiceRide(NewRide ride){
+		Map<String, List<NewRide>> activeRideCache = getCacheByName(CacheName.ACTIVE_RIDE_CACHE);
+		String key = createKey(ride.getSource(),ride.getDestination());
+		if(activeRideCache.containsKey(key)){
+			List<NewRide> activeRide = activeRideCache.get(key);
+			activeRide.add(ride);
+		}else{
+			List<NewRide> rides = new ArrayList<>();
+			rides.add(ride);
+			activeRideCache.put(key, rides);
+			save(CacheName.ACTIVE_RIDE_CACHE, activeRideCache);
+		}
 	}
 
 }
