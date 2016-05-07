@@ -3,8 +3,8 @@
  */
 package edu.nyu.cloud.cache;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,23 +16,23 @@ import edu.nyu.cloud.beans.Route;
  * 
  * @author rahulkhanna Date:25-Apr-2016
  */
-public class RoutesCacheImpl extends CacheImpl<Map<String, List<Route>>> implements RouteCache {
+public class RoutesCacheImpl extends CacheImpl<Map<String, Set<Route>>> implements RouteCache {
 
 	/**
 	 * Constructor
 	 * 
 	 * @param cacheTemplate
 	 */
-	public RoutesCacheImpl(RedisTemplate<String, Map<String, List<Route>>> cacheTemplate) {
+	public RoutesCacheImpl(RedisTemplate<String, Map<String, Set<Route>>> cacheTemplate) {
 		super(cacheTemplate);
 	}
 
 	@Override
-	public List<Route> getRoutesForGivenSourceAndDestination(String source, String destination) {
+	public Set<Route> getRoutesForGivenSourceAndDestination(String source, String destination) {
 		String keyForSourceAndDestination = createKey(source, destination);
-		Map<String, List<Route>> cache = (Map<String, List<Route>>) getCacheByName(CacheName.ROUTE_CACHE);
+		Map<String, Set<Route>> cache = (Map<String, Set<Route>>) getCacheByName(CacheName.ROUTE_CACHE);
 		if (cache == null) {
-			cache = new ConcurrentHashMap<String, List<Route>>();
+			cache = new ConcurrentHashMap<String, Set<Route>>();
 			addCacheForGivenName(CacheName.ROUTE_CACHE, cache);
 			return null;
 		}
@@ -40,9 +40,9 @@ public class RoutesCacheImpl extends CacheImpl<Map<String, List<Route>>> impleme
 	}
 
 	@Override
-	public void addRoutesToCache(String source, String destination, List<Route> possibleRoutes) {
+	public void addRoutesToCache(String source, String destination, Set<Route> possibleRoutes) {
 		String keyForSourceAndDestination = createKey(source, destination);
-		Map<String, List<Route>> routeCache = getCacheByName(CacheName.ROUTE_CACHE);
+		Map<String, Set<Route>> routeCache = getCacheByName(CacheName.ROUTE_CACHE);
 		routeCache.put(keyForSourceAndDestination, possibleRoutes);
 		save(CacheName.ROUTE_CACHE, routeCache);
 	}

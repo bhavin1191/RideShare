@@ -85,7 +85,8 @@ public class ModifiableCommonDBDao<T, E> extends CommonDBDao<T, E> implements Ba
 
 	@Override
 	public void save(T object) {
-		
+		getSession().save(getEntityName(), object);
+//		getSession().getTransaction().commit();
 	}
 
 	@Override

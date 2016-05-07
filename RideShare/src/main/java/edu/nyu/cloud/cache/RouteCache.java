@@ -3,7 +3,7 @@
  */
 package edu.nyu.cloud.cache;
 
-import java.util.List;
+import java.util.Set;
 
 import edu.nyu.cloud.beans.Route;
 
@@ -23,7 +23,7 @@ public interface RouteCache {
 	 * @param destination
 	 * @return
 	 */
-	public List<Route> getRoutesForGivenSourceAndDestination(String source, String destination);
+	public Set<Route> getRoutesForGivenSourceAndDestination(String source, String destination);
 
 	/**
 	 * This function is used to add newly discovered routes between a source and
@@ -33,7 +33,7 @@ public interface RouteCache {
 	 * @param destination
 	 * @param possibleRoutes
 	 */
-	public void addRoutesToCache(String source, String destination, List<Route> possibleRoutes);
+	public void addRoutesToCache(String source, String destination, Set<Route> possibleRoutes);
 
 	
 }

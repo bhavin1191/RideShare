@@ -13,5 +13,6 @@
 
 		<!-- Tables -->
 		<mapping resource="mappings/UserProfile.hbm.xml"></mapping>
+		<mapping resource="mappings/NewRide.hbm.xml"></mapping>
 	</session-factory>
 </hibernate-configuration>

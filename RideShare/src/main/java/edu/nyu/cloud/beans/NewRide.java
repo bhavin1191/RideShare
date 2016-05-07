@@ -5,7 +5,6 @@ package edu.nyu.cloud.beans;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * This class represensts a new Ride that has been create by a user for sharing.
@@ -20,11 +19,11 @@ public class NewRide implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private long id;
-	private final String requester;
-	private final String source;
-	private final String destination;
-	private final Date timeOfTrip;
-	private final Route selectedRoute;
+	private String requester;
+	private String source;
+	private String destination;
+	private Date timeOfTrip;
+	private Route selectedRoute;
 
 	/**
 	 * Constructor
@@ -80,6 +79,26 @@ public class NewRide implements Serializable {
 	 */
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public void setRequester(String requester) {
+		this.requester = requester;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+
+	public void setTimeOfTrip(Date timeOfTrip) {
+		this.timeOfTrip = timeOfTrip;
+	}
+
+	public void setSelectedRoute(Route selectedRoute) {
+		this.selectedRoute = selectedRoute;
 	}
 
 }

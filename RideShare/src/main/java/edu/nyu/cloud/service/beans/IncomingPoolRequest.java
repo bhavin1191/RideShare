@@ -1,7 +1,5 @@
 package edu.nyu.cloud.service.beans;
 
-import java.util.List;
-
 import edu.nyu.cloud.beans.Route;
 
 /**
@@ -17,9 +15,10 @@ public class IncomingPoolRequest {
 	private final String date;
 	private final String userId;
 	private final Route selectRoute;
+	private final String carType;
 
 	public IncomingPoolRequest(){
-		this(0,null,null,null,null,null);
+		this(0,null,null,null,null,null,null);
 	}
 	
 	/**
@@ -29,7 +28,7 @@ public class IncomingPoolRequest {
 	 * @param date
 	 * @param userId
 	 */
-	public IncomingPoolRequest(int numberOfPassengers, String destination, String source, String date, String userId,Route selectRoute) {
+	public IncomingPoolRequest(int numberOfPassengers, String destination, String source, String date, String userId,Route selectRoute,String carType) {
 		super();
 		this.numberOfPassengers = numberOfPassengers;
 		this.destination = destination;
@@ -37,6 +36,7 @@ public class IncomingPoolRequest {
 		this.date = date;
 		this.userId = userId;
 		this.selectRoute = selectRoute;
+		this.carType = carType;
 	}
 
 	public int getNumberOfPassengers() {
@@ -64,6 +64,13 @@ public class IncomingPoolRequest {
 	 */
 	public Route getSelectRoute() {
 		return selectRoute;
+	}
+
+	/**
+	 * @return the carType
+	 */
+	public String getCarType() {
+		return carType;
 	}
 
 }

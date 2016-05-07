@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import edu.nyu.cloud.beans.NewRide;
+import edu.nyu.cloud.beans.SerializableLatLng;
+import edu.nyu.cloud.dao.db.IDGenerator;
 import edu.nyu.cloud.newride.dao.db.NewRideDao;
 import edu.nyu.cloud.service.beans.IncomingPoolRequest;
 
@@ -19,15 +21,17 @@ import edu.nyu.cloud.service.beans.IncomingPoolRequest;
 public class NewRideCreator {
 
 	private final NewRideDao dao;
+	private final IDGenerator routeIDGenerator;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param dao
 	 */
-	public NewRideCreator(NewRideDao dao) {
+	public NewRideCreator(NewRideDao dao, IDGenerator routeIDGenerator) {
 		super();
 		this.dao = dao;
+		this.routeIDGenerator = routeIDGenerator;
 	}
 
 	public void createNewRideForPool(IncomingPoolRequest newPoolRequest) {
@@ -40,7 +44,17 @@ public class NewRideCreator {
 		}
 		NewRide ride = new NewRide(newPoolRequest.getUserId(), newPoolRequest.getSource(),
 				newPoolRequest.getDestination(), date, newPoolRequest.getSelectRoute());
+		long newRouteId = routeIDGenerator.getNewId();
+		for (SerializableLatLng serializableLatLng : ride.getSelectedRoute().getLatlng()) {
+			serializableLatLng.setRouteId(newRouteId);
+		}
+		System.out.println("Route id for new ride :"+newRouteId);
+		ride.getSelectedRoute().setId(newRouteId);
 		dao.saveNewRide(ride);
+		if(newPoolRequest.getCarType() == "Uber"){
+			
+		}
+		
 	}
 
 }
