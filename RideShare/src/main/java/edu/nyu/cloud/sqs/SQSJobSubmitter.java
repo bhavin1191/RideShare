@@ -54,7 +54,7 @@ public class SQSJobSubmitter {
 	public void sendJobRequest(IncomingPoolRequest request) {
 		Gson gson = new Gson();
 		String poolRequest = gson.toJson(request);
-        AmazonSQSClient sqs = new AmazonSQSClient(new BasicAWSCredentials("AKIAIERTEQ3F7AWEFMDA", "Bx70fu2Sr5ZGZ3aR/3QLn7WLVM1OAX/in3j86WZs"));
+        AmazonSQSClient sqs = new AmazonSQSClient(new BasicAWSCredentials("", ""));
         String queue = sqs.listQueues("myqueue").getQueueUrls().get(0);
 		sqs.sendMessage(new SendMessageRequest()
         	    .withQueueUrl(queue)
