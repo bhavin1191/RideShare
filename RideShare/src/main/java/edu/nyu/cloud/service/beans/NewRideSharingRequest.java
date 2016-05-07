@@ -3,8 +3,6 @@
  */
 package edu.nyu.cloud.service.beans;
 
-import java.util.Date;
-
 /**
  * This class represents a new request in search for ride. 
  * 
@@ -16,7 +14,7 @@ public class NewRideSharingRequest {
 	private final String userId;
 	private final String source;
 	private final String destination;
-	private final Date date;
+	private final String date;
 	
 	public NewRideSharingRequest(){
 		this(null,null,null,null);
@@ -30,7 +28,7 @@ public class NewRideSharingRequest {
 	 * @param destination
 	 * @param date
 	 */
-	public NewRideSharingRequest(String userId, String source, String destination, Date date) {
+	public NewRideSharingRequest(String userId, String source, String destination, String date) {
 		super();
 		this.userId = userId;
 		this.source = source;
@@ -46,7 +44,7 @@ public class NewRideSharingRequest {
 	public String getDestination() {
 		return destination;
 	}
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
 	

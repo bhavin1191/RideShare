@@ -3,9 +3,11 @@
  */
 package edu.nyu.cloud.service.controller;
 
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.nyu.cloud.beans.NewRide;
 import edu.nyu.cloud.beans.Route;
 import edu.nyu.cloud.beans.UserProfile;
 import edu.nyu.cloud.beans.factory.BeanFactory;
 import edu.nyu.cloud.cache.RouteCache;
+import edu.nyu.cloud.newride.dao.db.NewRideDao;
 import edu.nyu.cloud.service.beans.IncomingPoolRequest;
 import edu.nyu.cloud.service.beans.NewRideSharingRequest;
 import edu.nyu.cloud.user.dao.db.UserDao;
@@ -35,9 +39,10 @@ public class RideShareController {
 	private final UserDao userDao;
 	private final BeanFactory beanFactory;
 	private final RouteCache routeCache;
+	private final NewRideDao searchrideDao;
 
 	public RideShareController() {
-		this(null, null, null);
+		this(null, null, null, null);
 	}
 
 	/**
@@ -47,11 +52,12 @@ public class RideShareController {
 	 * 
 	 * @param rideCreator
 	 */
-	public RideShareController(BeanFactory beanFactory, UserDao userDao, RouteCache routeCache) {
+	public RideShareController(BeanFactory beanFactory, UserDao userDao, RouteCache routeCache, NewRideDao searchrideDao) {
 		super();
 		this.routeCache = routeCache;
 		this.beanFactory = beanFactory;
 		this.userDao = userDao;
+		this.searchrideDao = searchrideDao;
 	}
 
 	/**
@@ -105,10 +111,15 @@ public class RideShareController {
 	 * car pool request between source and destination.
 	 * 
 	 * @param newRideRequest
+	 * @return 
 	 */
 	@RequestMapping(value = "/searchCarForPooling", method = { RequestMethod.POST, RequestMethod.GET })
-	public void searchNewRideToShare(@RequestBody NewRideSharingRequest newRideRequest) {
+	public ResponseEntity<List<NewRide>> searchNewRideToShare(@RequestBody NewRideSharingRequest newRideRequest) {
 		// TODO:
+	 List<NewRide> list = getNewRideDao().searchRideOnSource();
+	 LOG.info("num of ride from cache = "+list.size());
+	 return new ResponseEntity<List<NewRide>>(list, HttpStatus.OK);
+	 
 	}
 
 	/**
@@ -116,6 +127,11 @@ public class RideShareController {
 	 */
 	public UserDao getUserDao() {
 		return userDao;
+	}
+	
+	public NewRideDao getNewRideDao()
+	{
+		return searchrideDao;
 	}
 
 }
