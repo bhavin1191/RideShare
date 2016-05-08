@@ -116,7 +116,7 @@ public class RideShareController {
 	@RequestMapping(value = "/searchCarForPooling", method = { RequestMethod.POST, RequestMethod.GET })
 	public ResponseEntity<List<NewRide>> searchNewRideToShare(@RequestBody NewRideSharingRequest newRideRequest) {
 		// TODO:
-	 List<NewRide> list = getNewRideDao().searchRideOnSource();
+	 List<NewRide> list = getNewRideDao().searchRideOnSource(newRideRequest.getSource(),newRideRequest.getDestination());
 	 LOG.info("num of ride from cache = "+list.size());
 	 return new ResponseEntity<List<NewRide>>(list, HttpStatus.OK);
 	 

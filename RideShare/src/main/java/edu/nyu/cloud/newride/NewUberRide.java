@@ -32,8 +32,8 @@ import edu.nyu.cloud.beans.UberRide;
  * command line.
  */
 public class NewUberRide {
-	private static LocalServerReceiver localServerReceiver;
-	private static UberRidesSyncService uberRidesService = null;
+	private LocalServerReceiver localServerReceiver;
+	private UberRidesSyncService uberRidesService = null;
 	private Credential credential = null;
 	private Session session;
 	public NewUberRide() throws Exception
@@ -44,7 +44,7 @@ public class NewUberRide {
 		session = new Session.Builder().setCredential(credential).setEnvironment(Session.Environment.SANDBOX)
 				.build();
 		// Create the Uber API service object once the User is authenticated
-		uberRidesService = GetApiInstance(session);
+		uberRidesService = getApiInstance(session);
 	}
 
 	public List<UberRide> confirmRide(String source, String destination, int no_of_person)
@@ -57,14 +57,14 @@ public class NewUberRide {
 
 			int submittedCapacity = no_of_person;
 
-			List<Product> products = GetProductList(uberRidesService, Float.parseFloat(srclatlng[0]),
+			List<Product> products = getProductList(uberRidesService, Float.parseFloat(srclatlng[0]),
 					Float.parseFloat(srclatlng[1]));
 			String productId = null;
 			for (Product p : products) {
 				if (p.getCapacity() == submittedCapacity) {
 
 					productId = p.getProductId();
-					rideId = RequestRide(productId, Float.parseFloat(srclatlng[0]),
+					rideId = requestRide(productId, Float.parseFloat(srclatlng[0]),
 							Float.parseFloat(srclatlng[1]), Float.parseFloat(destlatlng[0]),
 							Float.parseFloat(destlatlng[1]));
 
@@ -76,7 +76,7 @@ public class NewUberRide {
 					Response<Void> response = uberRidesService.updateSandboxRide(rideId, rideParameters);
 					System.out.println("status:"+ response.getStatus());
 					//uberridedetails.addAll(getRideDetails(rideId));
-					Ride listRide = GetRideStatus(rideId);
+					Ride listRide = getRideStatus(rideId);
 					UberRide uberride = new UberRide(p.getDisplayName(),p.getProductId(),rideId,p.getCapacity(),listRide.getDriver().getName(),listRide.getDriver().getPhoneNumber(),listRide.getEta(),listRide.getVehicle().getPictureUrl());
 					uberridedetails.add(uberride);
 
@@ -95,7 +95,7 @@ public class NewUberRide {
 	public List<UberRide> getRideDetails(String rideId)
 	{
 		List<UberRide> uberridedetails = new ArrayList<UberRide>();
-		Ride listRide = GetRideStatus(rideId);
+		Ride listRide = getRideStatus(rideId);
 		UberRide uberride = new UberRide(null,null,rideId,0,listRide.getDriver().getName(),listRide.getDriver().getPhoneNumber(),listRide.getEta(),listRide.getVehicle().getPictureUrl());
 		uberridedetails.add(uberride);
 		return uberridedetails;
@@ -110,7 +110,7 @@ public class NewUberRide {
 		return response.getStatus();
 	}
 
-	private static Ride GetRideStatus(String rideId) {
+	private Ride getRideStatus(String rideId) {
 		Response<Ride> rideStatus = null;
 		try {
 			rideStatus = uberRidesService.getRideDetails(rideId);
@@ -124,7 +124,7 @@ public class NewUberRide {
 		return listRide;
 	}
 
-	private static String RequestRide(String productId1, Float startLat, Float startLong,
+	private String requestRide(String productId1, Float startLat, Float startLong,
 			Float endLat, Float endLong) {
 		RideRequestParameters rideRequestParams = new RideRequestParameters.Builder()
 				.setPickupCoordinates(startLat, startLong).setProductId(productId1)
@@ -144,14 +144,14 @@ public class NewUberRide {
 		return rideId1;
 	}
 
-	private static UberRidesSyncService GetApiInstance(Session session) {
+	private UberRidesSyncService getApiInstance(Session session) {
 		if (uberRidesService == null) {
 			uberRidesService = UberRidesServices.createSync(session);
 		}
 		return uberRidesService;
 	}
 
-	public static List<Product> GetProductList(UberRidesSyncService uberApi, Float Lat, Float Long) {
+	public List<Product> getProductList(UberRidesSyncService uberApi, Float Lat, Float Long) {
 		ProductsResponse productsResponse = null;
 		try {
 			productsResponse = uberApi.getProducts(Lat, Long).getBody();
@@ -169,7 +169,7 @@ public class NewUberRide {
 	 * application, this method should exist on your server so that the client
 	 * ID and secret are not shared with the end user.
 	 */
-	private static Credential authenticate(String userId) throws Exception {
+	private Credential authenticate(String userId) throws Exception {
 
 		OAuth2Credentials oAuth2Credentials = createOAuth2Credentials();
 		System.out.println(userId);
@@ -204,7 +204,7 @@ public class NewUberRide {
 	 * Creates an {@link OAuth2Credentials} object that can be used by any of
 	 * the servlets.
 	 */
-	public static OAuth2Credentials createOAuth2Credentials() throws Exception {
+	private OAuth2Credentials createOAuth2Credentials() throws Exception {
 		// Load the client ID and secret from {@code
 		// resources/secrets.properties}. Ideally, your
 		// secrets would not be kept local. Instead, have your server accept the
@@ -245,7 +245,7 @@ public class NewUberRide {
 	/**
 	 * Loads the application's secrets.
 	 */
-	private static Properties loadSecretProperties() throws Exception {
+	private Properties loadSecretProperties() throws Exception {
 		Properties properties = new Properties();
 		InputStream propertiesStream = NewUberRide.class.getClassLoader().getResourceAsStream("secrets.properties");
 		if (propertiesStream == null) {
