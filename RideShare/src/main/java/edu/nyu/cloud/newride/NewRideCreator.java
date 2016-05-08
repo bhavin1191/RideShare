@@ -9,10 +9,12 @@ import java.util.Date;
 
 import edu.nyu.cloud.beans.NewRide;
 import edu.nyu.cloud.beans.SerializableLatLng;
+import edu.nyu.cloud.beans.UserProfile;
 import edu.nyu.cloud.dao.db.IDGenerator;
 import edu.nyu.cloud.newride.dao.db.NewRideDao;
 import edu.nyu.cloud.service.beans.IncomingPoolRequest;
-
+import edu.nyu.cloud.service.beans.EmailService;
+import edu.nyu.cloud.user.dao.db.hibernate.*;
 /**
  * This class is used to create a new ride which will be shared by other users.
  * 
@@ -49,6 +51,12 @@ public class NewRideCreator {
 			serializableLatLng.setRouteId(newRouteId);
 		}
 		System.out.println("Route id for new ride :"+newRouteId);
+		EmailService emailService = new EmailService();
+		UserDaoImpl userDaoImpl = new UserDaoImpl(null, null, routeIDGenerator);
+		UserProfile userProfileObj = userDaoImpl.getUserProfileByUserId((String)newPoolRequest.getUserId());
+		//Get User's email address from UserProfile table using id.
+		String emailAddress = userProfileObj.getEmailAddress();
+		emailService.SendEmail(emailAddress, "Ride created Successfully");
 		ride.getSelectedRoute().setId(newRouteId);
 		dao.saveNewRide(ride);
 		if(newPoolRequest.getCarType() == "Uber"){

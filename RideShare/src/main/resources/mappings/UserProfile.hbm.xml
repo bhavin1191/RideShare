@@ -10,5 +10,6 @@
 		<property name="firstName" column="FIRST_NAME" type="java.lang.String" />
 		<property name="lastName" column="LAST_NAME" type="java.lang.String" />
 		<property name="phoneNumber" column="PHONE_NUMBER" type="java.lang.String" />
+		<property name="emailAddress" column="EMAIL_ADDRESS" type="java.lang.String" />
 	</class>
 </hibernate-mapping>

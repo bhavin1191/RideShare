@@ -1,22 +1,7 @@
-package firsthibernate;
-
-
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Entity
-@Table(name="USER_PROFILE")
-public class UserProfile {
-
-	@Id	
-	int id;
-	private String userName;
-	private String userPassword;
-	private String userAddress;
-	private String firstName;
-	private String lastName;
-	private String phoneNumber;
+package edu.nyu.cloud.beans;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 /**
  * This class is used to capture user information which will be captured during
@@ -37,6 +22,7 @@ public class UserProfile {
 	private String aboutMe;
 	private int numberOfThumbsUp;
 	private int numberOfThumbsDown;
+	private String emailAddress;
 
 	public void setId(long id) {
 		this.id = id;
@@ -82,13 +68,15 @@ public class UserProfile {
 		this.numberOfThumbsDown = numberOfThumbsDown;
 	}
 
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
 	/**
 	 * Default constructor
 	 */
 	public UserProfile() {
-		this(0, null, null, null, null, null, null, null,null);
+		this(0, null, null, null, null, null, null, null,null,null);
 	}
-
 
 	/**
 	 * Constructor
@@ -100,14 +88,8 @@ public class UserProfile {
 	 * @param lastName
 	 * @param phoneNumber
 	 */
-
-	
-	public UserProfile(int id,String userName, String userPassword, String userAddress, String firstName, String lastName,
-			String phoneNumber) {
-
 	public UserProfile(int id, String userName, String userPassword, String userAddress, String firstName,
-			String lastName, String phoneNumber, String aboutMe,String sex) {
-
+			String lastName, String phoneNumber, String aboutMe,String sex, String emailAddress) {
 		super();
 		this.id = id;
 		this.userName = userName;
@@ -116,18 +98,9 @@ public class UserProfile {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.phoneNumber = phoneNumber;
-
-		
-	}
-	
-	public UserProfile()
-	{
-		
-	}
-
-
 		this.aboutMe = aboutMe;
 		this.sex = sex;
+		this.emailAddress = emailAddress;
 	}
 	
 
@@ -155,7 +128,6 @@ public class UserProfile {
 		return aboutMe;
 	}
 
-
 	public String getUserName() {
 		return userName;
 	}
@@ -179,6 +151,10 @@ public class UserProfile {
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
+	
+	public String getEmailAddress() {
+		return emailAddress;
+	}
 
 	/**
 	 * @return the id
@@ -186,10 +162,5 @@ public class UserProfile {
 	public long getId() {
 		return id;
 	}
-
 	
 }
-
-
-}
-
