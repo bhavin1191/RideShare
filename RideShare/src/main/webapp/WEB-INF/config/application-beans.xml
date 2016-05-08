@@ -21,6 +21,7 @@
 		<constructor-arg index="0" ref="beanFactory" />
 		<constructor-arg index="1" ref="userDao" />
 		<constructor-arg index="2" ref="routeCache" />
+		<constructor-arg index="3" ref="newRideDao" />
 	</bean>
 
 	<bean id="beanFactory" class="edu.nyu.cloud.beans.factory.BeanFactory">
@@ -48,7 +49,5 @@
 	<bean id="routeCache" class="edu.nyu.cloud.cache.RoutesCacheImpl">
 		<constructor-arg index="0" ref="redisTemplate" />
 	</bean>
-
-
-
+	
 </beans>
