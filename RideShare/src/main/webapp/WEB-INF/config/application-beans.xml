@@ -16,12 +16,13 @@
 
 	<context:property-placeholder location="classpath:rideshare.properties" />
 
-
+	<bean id="emailService" class="edu.nyu.cloud.service.beans.EmailService"/>			
+	
 	<bean id="rideShareController" class="edu.nyu.cloud.service.controller.RideShareController">
 		<constructor-arg index="0" ref="beanFactory" />
 		<constructor-arg index="1" ref="userDao" />
 		<constructor-arg index="2" ref="routeCache" />
-		<constructor-arg index="3" ref="newRideDao" />
+		<constructor-arg index="3" ref="newRideDao" />				
 	</bean>
 
 	<bean id="beanFactory" class="edu.nyu.cloud.beans.factory.BeanFactory">
@@ -30,8 +31,10 @@
 	</bean>
 
 	<bean id="rideCreator" class="edu.nyu.cloud.newride.NewRideCreator">
-		<constructor-arg index="0" ref="newRideDao" />
-		<constructor-arg index="1" ref="routeIdGenerator"/>
+		<constructor-arg index="0" ref="newRideDao" />		
+		<constructor-arg index="1" ref="routeIdGenerator"/>		
+		<constructor-arg index="2" ref="emailService" />
+		<constructor-arg index="3" ref="uberRideDao" />		
 	</bean>
 	
 	<bean id="mapService" class="edu.nyu.cloud.google.service.MapServiceImpl">

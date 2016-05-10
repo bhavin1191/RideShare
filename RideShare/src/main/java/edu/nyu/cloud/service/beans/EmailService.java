@@ -30,7 +30,7 @@ import com.amazonaws.services.simpleemail.model.VerifyEmailAddressRequest;
 	    private static final String SUBJECT = "Ride Info Update!";
         private static AWSCredentials credentials = null; 
 	    
-	    private static void Authenticate()
+	    private static void authenticate()
 	    {
 	    	
 	    	try 
@@ -46,7 +46,7 @@ import com.amazonaws.services.simpleemail.model.VerifyEmailAddressRequest;
 
 	        /*
 	         * Before you can send email via Amazon SES, you need to verify that you
-	         * own the email address from which youï¿½ll be sending email. This will
+	         * own the email address from which youÕll be sending email. This will
 	         * trigger a verification email, which will contain a link that you can
 	         * click on to complete the verification process.
 	         */
@@ -67,8 +67,9 @@ import com.amazonaws.services.simpleemail.model.VerifyEmailAddressRequest;
 		         */
 		         //verifyEmailAddress(ses, TO);
 	    }
+	    public void sendEmail(String toAddress,String body)
 	    {
-	    	Authenticate();
+	    	authenticate();
 	        Properties props = new Properties();
 			props.setProperty("mail.transport.protocol", "aws");
 
