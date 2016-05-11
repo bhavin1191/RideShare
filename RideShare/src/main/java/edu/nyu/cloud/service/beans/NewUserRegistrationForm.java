@@ -11,13 +11,14 @@ public class NewUserRegistrationForm {
 	private final String userId;
 	private final String password;
 	private final String phoneNumber;
+	private final String emailAddress;
 
 	/**
 	 * Default constructor is need for Jackson to create an instance of the
 	 * class.
 	 */
 	public NewUserRegistrationForm() {
-		this(0, null, null, null, null, null);
+		this(0, null, null, null, null, null, null);
 	}
 
 	/**
@@ -31,7 +32,7 @@ public class NewUserRegistrationForm {
 	 * @param phoneNumber
 	 */
 	public NewUserRegistrationForm(int age, String firstName, String lastName, String userId, String password,
-			String phoneNumber) {
+			String phoneNumber, String emailAddress) {
 		super();
 		this.age = age;
 		this.firstName = firstName;
@@ -39,6 +40,7 @@ public class NewUserRegistrationForm {
 		this.userId = userId;
 		this.password = password;
 		this.phoneNumber = phoneNumber;
+		this.emailAddress = emailAddress;
 	}
 
 	public int getAge() {
@@ -63,6 +65,10 @@ public class NewUserRegistrationForm {
 
 	public String getPhoneNumber() {
 		return phoneNumber;
+	}
+	
+	public String getEmailAddress() {
+		return emailAddress;
 	}
 
 }

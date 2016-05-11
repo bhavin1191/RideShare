@@ -23,6 +23,12 @@
 		<constructor-arg index="2" ref="userProfileIdGenerator"/>
 	</bean>
 	
+	<bean id = "uberRideDao" class="edu.nyu.cloud.newride.dao.db.hibernate.UberRideDaoImpl"  init-method="initialize">
+		<constructor-arg index="0" ref="sessionFactory"/>
+		<constructor-arg index="1" value="uberRide"/>
+		<constructor-arg index="2" ref="uberRideIdGenerator"/>
+	</bean>
+	
 	<bean id = "routeDao" class="edu.nyu.cloud.route.dao.db.hibernate.RouteDaoImpl" init-method="initialize">
 		<constructor-arg index="0" ref="sessionFactory"/>
 		<constructor-arg index="1" value="route"/>
@@ -43,6 +49,10 @@
 		<constructor-arg index="0" value="ride"/>
 	</bean>
 	
+	<bean id = "uberRideIdGenerator" class = "edu.nyu.cloud.dao.db.hibernate.UniqueIdGenerator" >
+		<constructor-arg index="0" value="uberRide"/>
+	</bean>
+	
 	<bean id = "userProfileIdGenerator" class = "edu.nyu.cloud.dao.db.hibernate.UniqueIdGenerator" >
 		<constructor-arg index="0" value="userProfile"/>
 	</bean>
@@ -50,7 +60,5 @@
 	<bean id = "latlngIdGenerator" class = "edu.nyu.cloud.dao.db.hibernate.UniqueIdGenerator">
 		<constructor-arg index="0" value="latlng"/>
 	</bean>
-	
-
 
 </beans>

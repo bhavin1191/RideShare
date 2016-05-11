@@ -59,6 +59,7 @@ public class NewUberRide {
 
 			List<Product> products = getProductList(uberRidesService, Float.parseFloat(srclatlng[0]),
 					Float.parseFloat(srclatlng[1]));
+			//List<Product> products = getProductList(uberRidesService,37.79f, -122.39f);
 			String productId = null;
 			for (Product p : products) {
 				if (p.getCapacity() == submittedCapacity) {
@@ -67,6 +68,8 @@ public class NewUberRide {
 					rideId = requestRide(productId, Float.parseFloat(srclatlng[0]),
 							Float.parseFloat(srclatlng[1]), Float.parseFloat(destlatlng[0]),
 							Float.parseFloat(destlatlng[1]));
+					//rideId = requestRide(productId,37.77f, -122.41f,37.49f, -122.41f);
+					
 
 					System.out.printf("Product ID %s%n", productId);
 					System.out.printf("Ride ID %s%n", rideId);
@@ -182,6 +185,7 @@ public class NewUberRide {
 					oAuth2Credentials.getRedirectUri());
 			System.out.println("Press Enter when done.");
 
+
 			System.in.read();
 
 			// Generate an authorization URL.
@@ -192,11 +196,11 @@ public class NewUberRide {
 			// Wait for the authorization code.
 			String authorizationCode = localServerReceiver.waitForCode();
 			System.out.println("Authentication received.");
-			localServerReceiver.stop();
+			//localServerReceiver.stop();
 			// Authenticate the user with the authorization code.
 			credential = oAuth2Credentials.authenticate(authorizationCode, userId);
 		}
-		localServerReceiver.stop();
+		//localServerReceiver.stop();
 		return credential;
 	}
 
@@ -215,6 +219,9 @@ public class NewUberRide {
 		String clientId = secrets.getProperty("clientId");
 		String clientSecret = secrets.getProperty("clientSecret");
 
+		//String clientId = "SSIsYo9v_Gkb1izsL9vOfdtzkADX143b";
+        //String clientSecret = "iO7FR7Igy79d8MJVA_uW7srHLtXR_1paqGtKzEUS";
+        
 		if (clientId.isEmpty() || clientSecret.isEmpty()) {
 			throw new IllegalArgumentException(
 					"Please enter your client ID and secret in the resources/secrets.properties file.");
@@ -229,17 +236,20 @@ public class NewUberRide {
 		AbstractDataStoreFactory dataStoreFactory = new FileDataStoreFactory(credentialDirectory);
 
 		// Start a local server to listen for the OAuth2 redirect.
-		if (localServerReceiver == null) {
-			localServerReceiver = new LocalServerReceiver.Builder().setPort(8181).build();
+		/*if (localServerReceiver == null) {
+			localServerReceiver = new LocalServerReceiver.Builder().setPort(8080).build();
 		} else {
 			localServerReceiver.stop();
-			localServerReceiver = new LocalServerReceiver.Builder().setPort(8181).build();
-		}
-		String redirectUri = localServerReceiver.getRedirectUri();
+			localServerReceiver = new LocalServerReceiver.Builder().setPort(8080).build();
+		}*/
+		String redirectUri = "http://localhost:8080/RideShare";//localServerReceiver.getRedirectUri();
 
 		// Build an OAuth2Credentials object with your secrets.
-		return new OAuth2Credentials.Builder().setCredentialDataStoreFactory(dataStoreFactory)
-				.setRedirectUri(redirectUri).setClientSecrets(clientId, clientSecret).build();
+		return new OAuth2Credentials.Builder()
+                .setCredentialDataStoreFactory(dataStoreFactory)
+                .setRedirectUri(redirectUri)
+                .setClientSecrets(clientId, clientSecret)
+                .build();
 	}
 
 	/**

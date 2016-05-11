@@ -7,15 +7,47 @@ public class UberRide implements Serializable
 	private static final long serialVersionUID = -4826835819368846051L;
 	
 	private long id;
-	private final String productdisplayname;
-	private final String productid;
-	private final String rideid;
-	private final int capacity;
-	private final String driverName;
-	private final String drivercontact;
-	private final Integer eta;
-	private final String vehiclepicture;
+	private  String productdisplayname;
+	private  String productid;
+	private  String rideid;
+	private  int capacity;
+	private  String driverName;
+	private  String drivercontact;
+	private  Integer eta;
+	private  String vehiclepicture;
 		
+	public void setProductdisplayname(String productdisplayname) {
+		this.productdisplayname = productdisplayname;
+	}
+
+	public void setProductid(String productid) {
+		this.productid = productid;
+	}
+
+	public void setRideid(String rideid) {
+		this.rideid = rideid;
+	}
+
+	public void setCapacity(int capacity) {
+		this.capacity = capacity;
+	}
+
+	public void setDriverName(String driverName) {
+		this.driverName = driverName;
+	}
+
+	public void setDrivercontact(String drivercontact) {
+		this.drivercontact = drivercontact;
+	}
+
+	public void setEta(Integer eta) {
+		this.eta = eta;
+	}
+
+	public void setVehiclepicture(String vehiclepicture) {
+		this.vehiclepicture = vehiclepicture;
+	}
+
 	/**
 	 * @param productdisplayname
 	 * @param productid

@@ -1,4 +1,7 @@
 package edu.nyu.cloud.beans;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 /**
  * This class is used to capture user information which will be captured during
@@ -19,6 +22,7 @@ public class UserProfile {
 	private String aboutMe;
 	private int numberOfThumbsUp;
 	private int numberOfThumbsDown;
+	private String emailAddress;
 
 	public void setId(long id) {
 		this.id = id;
@@ -64,11 +68,14 @@ public class UserProfile {
 		this.numberOfThumbsDown = numberOfThumbsDown;
 	}
 
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
 	/**
 	 * Default constructor
 	 */
 	public UserProfile() {
-		this(0, null, null, null, null, null, null, null,null);
+		this(0, null, null, null, null, null, null, null,null,null);
 	}
 
 	/**
@@ -82,7 +89,7 @@ public class UserProfile {
 	 * @param phoneNumber
 	 */
 	public UserProfile(int id, String userName, String userPassword, String userAddress, String firstName,
-			String lastName, String phoneNumber, String aboutMe,String sex) {
+			String lastName, String phoneNumber, String aboutMe,String sex, String emailAddress) {
 		super();
 		this.id = id;
 		this.userName = userName;
@@ -93,6 +100,7 @@ public class UserProfile {
 		this.phoneNumber = phoneNumber;
 		this.aboutMe = aboutMe;
 		this.sex = sex;
+		this.emailAddress = emailAddress;
 	}
 	
 
@@ -143,6 +151,10 @@ public class UserProfile {
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
+	
+	public String getEmailAddress() {
+		return emailAddress;
+	}
 
 	/**
 	 * @return the id
@@ -150,5 +162,5 @@ public class UserProfile {
 	public long getId() {
 		return id;
 	}
-
+	
 }

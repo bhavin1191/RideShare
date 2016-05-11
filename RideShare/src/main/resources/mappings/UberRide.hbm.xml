@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="edu.nyu.cloud.beans.UberRide" table="UBER_RIDE" entity-name="uberRide">
+		<id name="id" column="id" />
+		<property name="productdisplayname" column="productdisplayname" type="java.lang.String" />
+		<property name="productid" column="productid" type="java.lang.String" />
+		<property name="rideid" column="rideid" type="java.lang.String" />
+		<property name="capacity" column="capacity" type="int" />
+		<property name="driverName" column="driverName" type="java.lang.String" />
+		<property name="drivercontact" column="drivercontact" type="java.lang.String" />
+		<property name="eta" column="eta" type="int" />	
+		<property name="vehiclepicture" column="vehiclepicture" type="java.lang.String" />
+	</class>	
+</hibernate-mapping>
+
