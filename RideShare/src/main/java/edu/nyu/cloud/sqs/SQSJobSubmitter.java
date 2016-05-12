@@ -15,50 +15,35 @@ import edu.nyu.cloud.service.beans.IncomingPoolRequest;
  */
 public class SQSJobSubmitter {
 
-	private final String accessToken;
-	private final String accessSecret;
-	private final String consumerKey;
-	private final String consumerSecret;
-
-	public String getAccessToken() {
-		return accessToken;
-	}
-
-	public String getAccessSecret() {
-		return accessSecret;
-	}
-
-	public String getConsumerKey() {
-		return consumerKey;
-	}
-
-	public String getConsumerSecret() {
-		return consumerSecret;
-	}
-
+	private final String accessKey;
+	private final String secretKey;
+	
 	/**
-	 * Constructor
-	 * 
-	 * @param accessToken
-	 * @param accessSecret
-	 * @param consumerKey
-	 * @param consumerSecret
+	 * @param accessKey
+	 * @param secretKey
 	 */
-	public SQSJobSubmitter(String accessToken, String accessSecret, String consumerKey, String consumerSecret) {
-		this.accessToken = accessToken;
-		this.accessSecret = accessSecret;
-		this.consumerKey = consumerKey;
-		this.consumerSecret = consumerSecret;
+	public SQSJobSubmitter(String accessKey, String secretKey) {
+		super();
+		this.accessKey = accessKey;
+		this.secretKey = secretKey;
 	}
 
 	public void sendJobRequest(IncomingPoolRequest request) {
 		Gson gson = new Gson();
 		String poolRequest = gson.toJson(request);
-        AmazonSQSClient sqs = new AmazonSQSClient(new BasicAWSCredentials("", ""));
+        AmazonSQSClient sqs = new AmazonSQSClient(new BasicAWSCredentials(accessKey, accessKey));
         String queue = sqs.listQueues("myqueue").getQueueUrls().get(0);
 		sqs.sendMessage(new SendMessageRequest()
         	    .withQueueUrl(queue)
         	    .withMessageBody(poolRequest));
+	}
+
+	public String getAccessKey() {
+		return accessKey;
+	}
+
+	public String getSecretKey() {
+		return secretKey;
 	}
 
 }
