@@ -18,7 +18,6 @@ import com.google.maps.model.LatLng;
 public class SerializableLatLng implements Serializable {
 
 	private static final long serialVersionUID = 3933584737903911424L;
-
 	private long id;
 
 	/**
