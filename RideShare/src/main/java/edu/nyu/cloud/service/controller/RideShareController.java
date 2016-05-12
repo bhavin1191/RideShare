@@ -76,6 +76,7 @@ public class RideShareController {
 	@RequestMapping(value = "/newpoolrequest", method = { RequestMethod.POST, RequestMethod.GET })
 	public void openNewRideSharingRequest(@RequestBody IncomingPoolRequest newPoolRequest) {
 		beanFactory.getRideCreator().createNewRideForPool(newPoolRequest);
+		
 	}
 
 	/**
@@ -89,8 +90,8 @@ public class RideShareController {
 		System.out.println("incoming new userId = " + newUserData.getFirstName());
 		getUserDao().persistUserProfie(newUserData);
 		userCache.addUserIdByUserName(newUserData);
-		String emailBody = "New user created successfully. Book your trip right away.";
-		//emailNotification.sendConfirmationEmail(String.valueOf(newUserData.getId()), emailBody);
+		String emailBody = "Your profile has been created successfully. Book your trip right away.";
+		emailNotification.sendConfirmationEmail(String.valueOf(newUserData.getId()), emailBody);
 	}
 
 	/**
@@ -128,9 +129,14 @@ public class RideShareController {
 		SerializableLatLng source = beanFactory.getMapService().convertAddressToLatLng(newRideRequest.getSource());
 		SerializableLatLng destination = beanFactory.getMapService()
 				.convertAddressToLatLng(newRideRequest.getDestination());
-		List<RideAvailableForSharing> list = getNewRideDao().searchRideOnSource(source, destination);
+		List<RideAvailableForSharing> list = getNewRideDao().searchRideOnSource(source, destination, newRideRequest.getNumberOfPassengers());
 		LOG.info("num of ride from cache = " + list.size());
 		return new ResponseEntity<List<RideAvailableForSharing>>(list, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/acceptRide", method = { RequestMethod.POST, RequestMethod.GET })
+	public void rideAcceptedForSharing(@RequestBody RideAvailableForSharing acceptedRide){
+		searchrideDao.updateRide(acceptedRide);
 	}
 
 	/**
