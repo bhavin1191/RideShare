@@ -10,6 +10,7 @@ import edu.nyu.cloud.dao.db.BaseDatabaseDao;
 public interface NewRideDao extends BaseDatabaseDao<NewRide, NewRide> {
 
 	void saveNewRide(NewRide ride);
-	List<RideAvailableForSharing> searchRideOnSource(SerializableLatLng source, SerializableLatLng destination);
+	List<RideAvailableForSharing> searchRideOnSource(SerializableLatLng source, SerializableLatLng destination,int numberOfPassengers);
+	void updateRide(RideAvailableForSharing acceptedRide);
 	
 }
