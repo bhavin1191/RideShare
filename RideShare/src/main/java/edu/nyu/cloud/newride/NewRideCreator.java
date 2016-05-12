@@ -28,6 +28,7 @@ public class NewRideCreator {
 	private final IDGenerator routeIDGenerator;
 	private final EmailNotification emailNotification;
 	private final SQSJobSubmitter uberRideRequestGenerator;
+	
 
 	/**
 	 * Constructor
@@ -59,9 +60,7 @@ public class NewRideCreator {
 			long newRouteId = routeIDGenerator.getNewId();
 			for (SerializableLatLng serializableLatLng : ride.getSelectedRoute().getLatlng()) {
 				serializableLatLng.setRouteId(newRouteId);
-
 			}
-
 			System.out.println("Route id for new ride :" + newRouteId);
 			ride.getSelectedRoute().setId(newRouteId);
 			dao.saveNewRide(ride);
