@@ -1,7 +1,6 @@
 package edu.nyu.cloud.beans;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+
+import java.io.Serializable;
 
 /**
  * This class is used to capture user information which will be captured during
@@ -9,8 +8,12 @@ import org.hibernate.cfg.Configuration;
  * 
  * @author rahul.khanna Date:28-Mar-2016
  */
-public class UserProfile {
+public class UserProfile implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private long id;
 	private String userName;
 	private String userPassword;

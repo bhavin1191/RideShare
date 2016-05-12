@@ -6,7 +6,7 @@ public class UberRide implements Serializable
 {
 	private static final long serialVersionUID = -4826835819368846051L;
 	
-	private long id;
+	private  long id;
 	private  String productdisplayname;
 	private  String productid;
 	private  String rideid;
