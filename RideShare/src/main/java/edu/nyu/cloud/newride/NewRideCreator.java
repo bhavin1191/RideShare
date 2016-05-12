@@ -19,6 +19,7 @@ import edu.nyu.cloud.dao.db.IDGenerator;
 import edu.nyu.cloud.newride.dao.db.NewRideDao;
 import edu.nyu.cloud.newride.dao.db.UberRideDao;
 import edu.nyu.cloud.service.beans.IncomingPoolRequest;
+import edu.nyu.cloud.service.beans.EmailNotification;
 import edu.nyu.cloud.service.beans.EmailService;
 import edu.nyu.cloud.user.dao.db.hibernate.*;
 
@@ -32,45 +33,52 @@ public class NewRideCreator {
 	private final NewRideDao dao;	
 	private final IDGenerator routeIDGenerator;
 	private final UberRideDao uberdao;
-	private final EmailService emailService;
+	private final EmailNotification emailNotification;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param dao
 	 */
-	public NewRideCreator(NewRideDao dao, IDGenerator routeIDGenerator, EmailService emailService,
-			UberRideDao uberdao) {
+	public NewRideCreator(NewRideDao dao, IDGenerator routeIDGenerator,
+			UberRideDao uberdao, EmailNotification emailNotification) {
 		super();
 		this.dao = dao;		
 		this.routeIDGenerator = routeIDGenerator;		
-		this.emailService=emailService;
 		this.uberdao = uberdao;
+		this.emailNotification = emailNotification;
 	}
 
 	public void createNewRideForPool(IncomingPoolRequest newPoolRequest) {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date date;
-		
+		String emailBody = null;		
 		try {
 			date = format.parse(newPoolRequest.getDate());
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
 		}
-		NewRide ride = new NewRide(newPoolRequest.getUserId(), newPoolRequest.getSource(),
-				newPoolRequest.getDestination(), date, newPoolRequest.getSelectRoute());
-		long newRouteId = routeIDGenerator.getNewId();
-		for (SerializableLatLng serializableLatLng : ride.getSelectedRoute().getLatlng()) {
-			serializableLatLng.setRouteId(newRouteId);
-			
-			}
-	
-		System.out.println("Route id for new ride :"+newRouteId);
-		ride.getSelectedRoute().setId(newRouteId);
-		dao.saveNewRide(ride);
-		if(newPoolRequest.getCarType().toLowerCase().equals("uber"))
+		
+		if(newPoolRequest.getCarType().toLowerCase().equals("mycar"))
 		{
-			ride = null;
+			NewRide ride = new NewRide(newPoolRequest.getUserId(), newPoolRequest.getSource(),
+					newPoolRequest.getDestination(), date, newPoolRequest.getSelectRoute());
+			long newRouteId = routeIDGenerator.getNewId();
+			for (SerializableLatLng serializableLatLng : ride.getSelectedRoute().getLatlng()) {
+				serializableLatLng.setRouteId(newRouteId);
+				
+				}
+		
+			System.out.println("Route id for new ride :"+newRouteId);
+			ride.getSelectedRoute().setId(newRouteId);
+			dao.saveNewRide(ride);
+			emailBody = constructEmailBody(ride,null);
+			emailNotification.sendConfirmationEmail(newPoolRequest.getUserId(), emailBody); // Send confirmation email for non uber ride.
+			
+		}
+		else if(newPoolRequest.getCarType().toLowerCase().equals("uber"))
+		{
+			
 			NewUberRide newUber = null;
 			try {
 				newUber = new NewUberRide();
@@ -89,20 +97,15 @@ public class NewRideCreator {
 				e.printStackTrace();
 			}			
 			uberdao.saveUberRide(uberRide.get(0));
-		    sendConfirmationEmail(newPoolRequest.getUserId(), ride, uberRide.get(0));
+			emailBody = constructEmailBody(null,uberRide.get(0));
+			emailNotification.sendConfirmationEmail(newPoolRequest.getUserId(), emailBody);
 		}
-		if(ride != null)
-		{
-			sendConfirmationEmail(newPoolRequest.getUserId(), ride, null); // Send confirmation email for non uber ride.
-		}
+		
 		
 	}
 	
-	public void sendConfirmationEmail(String userId, NewRide ride, UberRide uberRide)
+	public String constructEmailBody( NewRide ride, UberRide uberRide)
 	{
-		UserDaoImpl userDaoImpl = new UserDaoImpl(null, null, routeIDGenerator);
-		UserProfile userProfileObj = userDaoImpl.getUserProfileByUserId(userId);		//Get User's email address from UserProfile table using id.
-		String emailAddress = userProfileObj.getEmailAddress();
 		StringBuilder emailBody = new StringBuilder();
 		if(ride != null)
 		{
@@ -122,7 +125,7 @@ public class NewRideCreator {
 		{
 			emailBody.append("Ride created successfully we will provide details shortly");
 		}
-		emailService.sendEmail(emailAddress, emailBody.toString());
+		return emailBody.toString();
 	}
 
 }
