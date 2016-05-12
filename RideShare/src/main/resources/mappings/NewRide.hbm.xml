@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="edu.nyu.cloud.beans.NewRide" entity-name="ride">
+	<class name="edu.nyu.cloud.beans.NewRide" table="ride" entity-name="ride">
 		<id name="id" column="id" />
 		<property name="requester" column="USER_NAME" type="java.lang.String" />
 		<property name="source" column="source" type="java.lang.String" />
@@ -32,7 +32,6 @@
 
 	<class name="edu.nyu.cloud.beans.SerializableLatLng" entity-name="latlng">
 		<id name="id" type="long" column="id">
-			<generator class="identity" />
 		</id>
 		<property name="lat" type="double" column="lat" />
 		<property name="lng" type="double" column="lng" />
