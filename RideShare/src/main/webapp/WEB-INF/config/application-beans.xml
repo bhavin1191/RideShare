@@ -24,12 +24,17 @@
 		<constructor-arg index="1" ref="userDao" />
 		<constructor-arg index="2" ref="routeCache" />
 		<constructor-arg index="3" ref="newRideDao" />
-		<constructor-arg index="4" ref="emailNotification"/>				
+		<constructor-arg index="4" ref="emailNotification"/>	
+		<constructor-arg index="5" ref="userCache"/>			
 	</bean>
 	
 	<bean id="emailNotification" class="edu.nyu.cloud.service.beans.EmailNotification">
 		<constructor-arg index="0" ref="emailService" />
-		<constructor-arg index="1" ref="userDao" />		
+		<constructor-arg index="1" ref="userCache" />		
+	</bean>
+	
+	<bean id= "userCache" class= "edu.nyu.cloud.cache.UserCacheImpl">
+		<constructor-arg index="0" ref="redisTemplate" />
 	</bean>
 	
 	<bean id="beanFactory" class="edu.nyu.cloud.beans.factory.BeanFactory">
@@ -40,8 +45,8 @@
 	<bean id="rideCreator" class="edu.nyu.cloud.newride.NewRideCreator">
 		<constructor-arg index="0" ref="newRideDao" />		
 		<constructor-arg index="1" ref="routeIdGenerator"/>		
-		<constructor-arg index="2" ref="uberRideDao" />	
-		<constructor-arg index="3" ref="emailNotification"/>	
+		<constructor-arg index="2" ref="emailNotification"/>
+		<constructor-arg index="3" ref="uberRideRequestGenerator"/>	
 	</bean>
 	
 	<bean id="mapService" class="edu.nyu.cloud.google.service.MapServiceImpl">
@@ -58,6 +63,11 @@
 
 	<bean id="routeCache" class="edu.nyu.cloud.cache.RoutesCacheImpl">
 		<constructor-arg index="0" ref="redisTemplate" />
+	</bean>
+	
+	<bean id = "uberRideRequestGenerator" class= "edu.nyu.cloud.sqs.SQSJobSubmitter">
+		<constructor-arg index="0" value = ""/>
+		<constructor-arg index="1" value = ""/>
 	</bean>
 	
 </beans>

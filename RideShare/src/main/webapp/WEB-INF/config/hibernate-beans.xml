@@ -15,6 +15,7 @@
 		<constructor-arg index="0" ref="sessionFactory"/>
 		<constructor-arg index="1" value="ride"/>
 		<constructor-arg index="2" ref="newRideIdGenerator"/>
+		<constructor-arg index="3" ref="userCache"/>
 	</bean>
 	
 	<bean id= "userDao" class="edu.nyu.cloud.user.dao.db.hibernate.UserDaoImpl" init-method="initialize">
