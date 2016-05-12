@@ -11,6 +11,6 @@ package edu.nyu.cloud.cache;
  */
 public enum CacheName {
 
-	ROUTE_CACHE, ACTIVE_RIDE_CACHE
+	ROUTE_CACHE, ACTIVE_RIDE_CACHE, USER_CACHE
 	
 }
