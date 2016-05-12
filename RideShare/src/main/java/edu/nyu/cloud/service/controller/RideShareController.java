@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
-import edu.nyu.cloud.beans.NewRide;
+import edu.nyu.cloud.beans.RideAvailableForSharing;
 import edu.nyu.cloud.beans.Route;
+import edu.nyu.cloud.beans.SerializableLatLng;
 import edu.nyu.cloud.beans.UserProfile;
 import edu.nyu.cloud.beans.factory.BeanFactory;
 import edu.nyu.cloud.cache.RouteCache;
+import edu.nyu.cloud.cache.UserCache;
 import edu.nyu.cloud.newride.dao.db.NewRideDao;
 import edu.nyu.cloud.service.beans.EmailNotification;
 import edu.nyu.cloud.service.beans.IncomingPoolRequest;
@@ -42,9 +43,10 @@ public class RideShareController {
 	private final RouteCache routeCache;
 	private final NewRideDao searchrideDao;
 	private final EmailNotification emailNotification;
-    
+	private final UserCache userCache;
+
 	public RideShareController() {
-		this(null, null, null, null,null);
+		this(null, null, null, null, null,null);
 	}
 
 	/**
@@ -54,13 +56,15 @@ public class RideShareController {
 	 * 
 	 * @param rideCreator
 	 */
-	public RideShareController(BeanFactory beanFactory, UserDao userDao, RouteCache routeCache, NewRideDao searchrideDao, EmailNotification emailNotification) {
+	public RideShareController(BeanFactory beanFactory, UserDao userDao, RouteCache routeCache,
+			NewRideDao searchrideDao, EmailNotification emailNotification,UserCache userCache) {
 		super();
 		this.routeCache = routeCache;
 		this.beanFactory = beanFactory;
 		this.userDao = userDao;
 		this.searchrideDao = searchrideDao;
 		this.emailNotification = emailNotification;
+		this.userCache = userCache;
 	}
 
 	/**
@@ -84,8 +88,9 @@ public class RideShareController {
 		LOG.info("incoming new userId = " + newUserData.getFirstName());
 		System.out.println("incoming new userId = " + newUserData.getFirstName());
 		getUserDao().persistUserProfie(newUserData);
+		userCache.addUserIdByUserName(newUserData);
 		String emailBody = "New user created successfully. Book your trip right away.";
-		emailNotification.sendConfirmationEmail(String.valueOf(newUserData.getId()), emailBody);
+		//emailNotification.sendConfirmationEmail(String.valueOf(newUserData.getId()), emailBody);
 	}
 
 	/**
@@ -100,13 +105,13 @@ public class RideShareController {
 			@RequestBody IncomingPoolRequest newPoolRequestToSearchRoutes) {
 		Set<Route> routes = routeCache.getRoutesForGivenSourceAndDestination(newPoolRequestToSearchRoutes.getSource(),
 				newPoolRequestToSearchRoutes.getDestination());
-		if (routes == null || routes.isEmpty() ) {
+		if (routes == null || routes.isEmpty()) {
 			routes = beanFactory.getMapService().fetchPossibleRoutes(newPoolRequestToSearchRoutes.getSource(),
 					newPoolRequestToSearchRoutes.getDestination());
 			routeCache.addRoutesToCache(newPoolRequestToSearchRoutes.getSource(),
 					newPoolRequestToSearchRoutes.getDestination(), routes);
-		}else{//TODO: remove this else block.
-			LOG.info("num of routes from cache = "+routes.size());
+		} else {// TODO: remove this else block.
+			LOG.info("num of routes from cache = " + routes.size());
 		}
 		return new ResponseEntity<Set<Route>>(routes, HttpStatus.OK);
 	}
@@ -116,26 +121,26 @@ public class RideShareController {
 	 * car pool request between source and destination.
 	 * 
 	 * @param newRideRequest
-	 * @return 
+	 * @return
 	 */
 	@RequestMapping(value = "/searchCarForPooling", method = { RequestMethod.POST, RequestMethod.GET })
-	public ResponseEntity<List<NewRide>> searchNewRideToShare(@RequestBody NewRideSharingRequest newRideRequest) {
-		// TODO:
-	 List<NewRide> list = getNewRideDao().searchRideOnSource(newRideRequest.getSource(),newRideRequest.getDestination());
-	 LOG.info("num of ride from cache = "+list.size());
-	 return new ResponseEntity<List<NewRide>>(list, HttpStatus.OK);
-	 
+	public ResponseEntity<List<RideAvailableForSharing>> searchNewRideToShare(@RequestBody NewRideSharingRequest newRideRequest) {
+		SerializableLatLng source = beanFactory.getMapService().convertAddressToLatLng(newRideRequest.getSource());
+		SerializableLatLng destination = beanFactory.getMapService()
+				.convertAddressToLatLng(newRideRequest.getDestination());
+		List<RideAvailableForSharing> list = getNewRideDao().searchRideOnSource(source, destination);
+		LOG.info("num of ride from cache = " + list.size());
+		return new ResponseEntity<List<RideAvailableForSharing>>(list, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * @return the userDao
 	 */
 	public UserDao getUserDao() {
 		return userDao;
 	}
-	
-	public NewRideDao getNewRideDao()
-	{
+
+	public NewRideDao getNewRideDao() {
 		return searchrideDao;
 	}
 
