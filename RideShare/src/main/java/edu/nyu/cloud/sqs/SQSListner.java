@@ -3,14 +3,12 @@
  */
 package edu.nyu.cloud.sqs;
 
-import java.util.List;
+import java.io.IOException;
 
 import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
-import com.amazonaws.services.sqs.model.DeleteMessageRequest;
-import com.amazonaws.services.sqs.model.ListQueuesResult;
 import com.amazonaws.services.sqs.model.Message;
 import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 
@@ -31,10 +29,11 @@ public class SQSListner {
 	}
 
 	/**
+	 * @throws IOException 
 	 * 
 	 */
-	public SQSListner() {
-		credentials = new ProfileCredentialsProvider("default").getCredentials();
+	public SQSListner() throws IOException {
+		credentials = new PropertiesCredentials(SQSListner.class.getResourceAsStream("AwsCredentials.properties"));
 		sqsInstance = new AmazonSQSClient(credentials);
 	}
 
