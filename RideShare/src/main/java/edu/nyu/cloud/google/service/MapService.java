@@ -6,6 +6,7 @@ package edu.nyu.cloud.google.service;
 import java.util.Set;
 
 import edu.nyu.cloud.beans.Route;
+import edu.nyu.cloud.beans.SerializableLatLng;
 
 /**
  * This service is used to take help from google based on different request made by the user.
@@ -16,5 +17,7 @@ import edu.nyu.cloud.beans.Route;
 public interface MapService {
 	
 	public Set<Route> fetchPossibleRoutes(String source, String destination);
+	
+	public SerializableLatLng convertAddressToLatLng(String address);
 
 }

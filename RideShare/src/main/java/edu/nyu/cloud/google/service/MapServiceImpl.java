@@ -4,9 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.http.HttpEntity;
@@ -39,16 +41,50 @@ import edu.nyu.cloud.dao.db.IDGenerator;
 public class MapServiceImpl implements MapService {
 
 	private static final String HTTP_GET_URL = "http://maps.google.com/maps/api/geocode/json?latlng=";
+	private static final String ADDRESS_TO_LAT_LNG_URL = "http://maps.googleapis.com/maps/api/geocode/json?address=";
 	private final GeoApiContext context;
 	private final CloseableHttpClient client;
 	private final IDGenerator routeIdGenerator;
 	private final IDGenerator latlngIdGenerator;
-	
+
 	public MapServiceImpl(IDGenerator latlngIdGenerator, IDGenerator routeIdGenerator) {
 		this.context = new GeoApiContext().setApiKey("AIzaSyC_xRB8quFF-9SM2bxokO9KekSyoRsqZsE");
 		client = HttpClientBuilder.create().build();
-		this.routeIdGenerator =routeIdGenerator;
+		this.routeIdGenerator = routeIdGenerator;
 		this.latlngIdGenerator = latlngIdGenerator;
+	}
+
+	public SerializableLatLng convertAddressToLatLng(String address) {
+		HttpGet httpGet = null;
+		SerializableLatLng latLng = new SerializableLatLng();
+		try {
+			String result = null;
+			httpGet = new HttpGet(ADDRESS_TO_LAT_LNG_URL + URLEncoder.encode(address, "UTF-8"));
+			HttpResponse response;
+			JSONObject latLngInJson = null;
+			response = client.execute(httpGet);
+			HttpEntity entity = response.getEntity();
+			InputStream stream = entity.getContent();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"), 8);
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			result = sb.toString();
+			JSONObject resultInJson = new JSONObject(result);
+			if (!resultInJson.getJSONArray("results").isNull(0)) {
+				latLngInJson = resultInJson.getJSONArray("results").getJSONObject(0);
+				JSONObject r = (JSONObject) latLngInJson.get("geometry");
+				latLng.setLat((Double)((JSONObject)r.get("location")).get("lat"));
+				latLng.setLng((Double)((JSONObject)r.get("location")).get("lng"));
+			}
+		} catch (Exception e1) {
+			throw new RuntimeException(e1);
+		} finally {
+			httpGet.releaseConnection();
+		}
+		return latLng;
 	}
 
 	// fetch Route Type Object with list of waypoints or legs address, distance
@@ -66,14 +102,16 @@ public class MapServiceImpl implements MapService {
 				DirectionsLeg[] leg = directions.legs;
 				DirectionsStep[] step = leg[0].steps;
 				List<LatLng> uniqueWaypoints = findUniqueWaypoints(step);
-				SerializableDistance distance = new SerializableDistance(leg[0].distance.inMeters,leg[0].distance.humanReadable);
-				SerializableDuration duration = new SerializableDuration(leg[0].duration.inSeconds,leg[0].duration.humanReadable);
+				SerializableDistance distance = new SerializableDistance(leg[0].distance.inMeters,
+						leg[0].distance.humanReadable);
+				SerializableDuration duration = new SerializableDuration(leg[0].duration.inSeconds,
+						leg[0].duration.humanReadable);
 				Set<SerializableLatLng> latLngs = new HashSet<>(latlngofeachpath.size());
 				List<String> addresses = getAddressableRoutes(uniqueWaypoints);
-				Route newRoute = new Route(0l,addresses, distance, duration, latLngs);
-				
+				Route newRoute = new Route(0l, addresses, distance, duration, latLngs);
+
 				for (LatLng val : latlngofeachpath) {
-					SerializableLatLng latLng = new SerializableLatLng(val.lat, val.lng,0l);
+					SerializableLatLng latLng = new SerializableLatLng(val.lat, val.lng, 0l);
 					latLng.setId(latlngIdGenerator.getNewId());
 					latLngs.add(latLng);
 				}
@@ -126,7 +164,7 @@ public class MapServiceImpl implements MapService {
 				}
 			}
 		} catch (Exception e) {
-			//throw new RuntimeException(e);
+			// throw new RuntimeException(e);
 		}
 		return addresses;
 	}
@@ -156,7 +194,7 @@ public class MapServiceImpl implements MapService {
 			result = sb.toString();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
-		}finally{
+		} finally {
 			httpGet.releaseConnection();
 		}
 		return result;
