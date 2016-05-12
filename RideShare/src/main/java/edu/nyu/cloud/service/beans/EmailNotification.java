@@ -1,25 +1,22 @@
 package edu.nyu.cloud.service.beans;
 
 import edu.nyu.cloud.beans.UserProfile;
-import edu.nyu.cloud.user.dao.db.UserDao;
-import edu.nyu.cloud.user.dao.db.hibernate.UserDaoImpl;
+import edu.nyu.cloud.cache.UserCache;
 
-public class EmailNotification 
-{
+public class EmailNotification {
+
 	private final EmailService emailService;
-	private final UserDao userDao;
+	private final UserCache userCache;
 
-	public EmailNotification(EmailService emailService,UserDao userDao) {
+	public EmailNotification(EmailService emailService, UserCache userCache) {
 		this.emailService = emailService;
-		this.userDao = userDao; 
+		this.userCache = userCache;
 	}
 
 	public void sendConfirmationEmail(String userId, String emailBody) {
-	    UserProfile userProfileObj =  userDao.getUserProfileByUserId(userId); //Get User's email
-		// address from UserProfile table using id.
-	   String toAddress = userProfileObj.getEmailAddress();
-	   emailService.sendEmail(toAddress, emailBody);
-
+		UserProfile userProfileObj = userCache.getUserByUserName(userId);
+		String toAddress = userProfileObj.getEmailAddress();
+		emailService.sendEmail(toAddress, emailBody);
 	}
 
 }
