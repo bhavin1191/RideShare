@@ -8,7 +8,7 @@ public class RideAvailableForSharing {
 	private String source;
 	private String destination;
 	private UserProfile profile;
-	
+	private int requiredSeats;
 	
 	/**
 	 * @param creator
@@ -18,13 +18,14 @@ public class RideAvailableForSharing {
 	 * @param destination
 	 */
 	public RideAvailableForSharing(String creator, int seatsAvailable, String rideId, String source,
-			String destination) {
+			String destination, int requiredSeats) {
 		super();
 		this.creator = creator;
 		this.seatsAvailable = seatsAvailable;
 		this.rideId = rideId;
 		this.source = source;
 		this.destination = destination;
+		this.requiredSeats = requiredSeats;
 	}
 	public String getCreator() {
 		return creator;
@@ -68,5 +69,11 @@ public class RideAvailableForSharing {
 	public void setProfile(UserProfile profile) {
 		this.profile = profile;
 	}
-		
+	
+	public int getRequiredSeats() {
+		return requiredSeats;
+	}
+	public void setRequiredSeats(int requiredSeats) {
+		this.requiredSeats = requiredSeats;
+	}		
 }
