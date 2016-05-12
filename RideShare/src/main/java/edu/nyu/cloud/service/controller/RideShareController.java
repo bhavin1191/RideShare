@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import edu.nyu.cloud.beans.NewRide;
 import edu.nyu.cloud.beans.Route;
 import edu.nyu.cloud.beans.UserProfile;
 import edu.nyu.cloud.beans.factory.BeanFactory;
 import edu.nyu.cloud.cache.RouteCache;
 import edu.nyu.cloud.newride.dao.db.NewRideDao;
+import edu.nyu.cloud.service.beans.EmailNotification;
 import edu.nyu.cloud.service.beans.IncomingPoolRequest;
 import edu.nyu.cloud.service.beans.NewRideSharingRequest;
 import edu.nyu.cloud.user.dao.db.UserDao;
@@ -40,9 +41,10 @@ public class RideShareController {
 	private final BeanFactory beanFactory;
 	private final RouteCache routeCache;
 	private final NewRideDao searchrideDao;
-
+	private final EmailNotification emailNotification;
+    
 	public RideShareController() {
-		this(null, null, null, null);
+		this(null, null, null, null,null);
 	}
 
 	/**
@@ -52,12 +54,13 @@ public class RideShareController {
 	 * 
 	 * @param rideCreator
 	 */
-	public RideShareController(BeanFactory beanFactory, UserDao userDao, RouteCache routeCache, NewRideDao searchrideDao) {
+	public RideShareController(BeanFactory beanFactory, UserDao userDao, RouteCache routeCache, NewRideDao searchrideDao, EmailNotification emailNotification) {
 		super();
 		this.routeCache = routeCache;
 		this.beanFactory = beanFactory;
 		this.userDao = userDao;
 		this.searchrideDao = searchrideDao;
+		this.emailNotification = emailNotification;
 	}
 
 	/**
@@ -81,6 +84,8 @@ public class RideShareController {
 		LOG.info("incoming new userId = " + newUserData.getFirstName());
 		System.out.println("incoming new userId = " + newUserData.getFirstName());
 		getUserDao().persistUserProfie(newUserData);
+		String emailBody = "New user created successfully. Book your trip right away.";
+		emailNotification.sendConfirmationEmail(String.valueOf(newUserData.getId()), emailBody);
 	}
 
 	/**
@@ -121,7 +126,7 @@ public class RideShareController {
 	 return new ResponseEntity<List<NewRide>>(list, HttpStatus.OK);
 	 
 	}
-
+	
 	/**
 	 * @return the userDao
 	 */
