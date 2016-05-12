@@ -12,7 +12,7 @@ import javax.mail.internet.MimeMessage;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.simpleemail.AWSJavaMailTransport;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
@@ -32,10 +32,9 @@ import com.amazonaws.services.simpleemail.model.VerifyEmailAddressRequest;
 	    
 	    private static void authenticate()
 	    {
-	    	
 	    	try 
 	    	{
-	    		credentials = new ProfileCredentialsProvider("default").getCredentials();
+	    		credentials = new PropertiesCredentials(EmailService.class.getResourceAsStream("AwsCredentials.properties"));
 	    	} catch (Exception e) 
 	    	{
 	    		throw new AmazonClientException("Cannot load the credentials from the credential profiles file. "
@@ -46,7 +45,7 @@ import com.amazonaws.services.simpleemail.model.VerifyEmailAddressRequest;
 
 	        /*
 	         * Before you can send email via Amazon SES, you need to verify that you
-	         * own the email address from which youÕll be sending email. This will
+	         * own the email address from which youï¿½ll be sending email. This will
 	         * trigger a verification email, which will contain a link that you can
 	         * click on to complete the verification process.
 	         */
