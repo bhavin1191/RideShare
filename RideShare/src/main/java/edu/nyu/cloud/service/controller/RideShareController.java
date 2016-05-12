@@ -91,7 +91,7 @@ public class RideShareController {
 		getUserDao().persistUserProfie(newUserData);
 		userCache.addUserIdByUserName(newUserData);
 		String emailBody = "Your profile has been created successfully. Book your trip right away.";
-		emailNotification.sendConfirmationEmail(String.valueOf(newUserData.getId()), emailBody);
+		emailNotification.sendConfirmationEmail(String.valueOf(newUserData.getUserName()), emailBody);
 	}
 
 	/**
