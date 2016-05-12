@@ -26,7 +26,7 @@ public class EmailService {
 	 * you can receive the initial confirmation email from Amazon Simple Email
 	 * Service.
 	 */
-	private static final String FROM = "rk2795@nyu.edu";
+	private static final String FROM = "kirtika.suren@gmail.com";
 	private static final String SUBJECT = "Ride Info Update!";
 	private static AWSCredentials credentials = null;
 	private final String accessKey;
@@ -88,7 +88,7 @@ public class EmailService {
 	}
 
 	public void sendEmail(String toAddress, String body) {
-		
+		authenticate();
 		Properties props = new Properties();
 		props.setProperty("mail.transport.protocol", "aws");
 
