@@ -56,21 +56,24 @@ public class NewUberRide {
 			String[] destlatlng = destination.split(",");
 
 			int submittedCapacity = no_of_person;
-
-			List<Product> products = getProductList(uberRidesService, Float.parseFloat(srclatlng[0]),
-					Float.parseFloat(srclatlng[1]));
-			//List<Product> products = getProductList(uberRidesService,37.79f, -122.39f);
+			
+			/*List<Product> products = getProductList(uberRidesService, Float.parseFloat(srclatlng[0]),
+					Float.parseFloat(srclatlng[1]));*/
+			
+			/*ToDo Hardcoded source lat long to get product id in current location since the above one 
+			wasn't working*/
+			List<Product> products = getProductList(uberRidesService,37.79f, -122.39f);
 			String productId = null;
 			for (Product p : products) {
 				if (p.getCapacity() == submittedCapacity) {
 
-					productId = p.getProductId();
-					rideId = requestRide(productId, Float.parseFloat(srclatlng[0]),
+					productId = p.getProductId();					
+					/*rideId = requestRide(productId, Float.parseFloat(srclatlng[0]),
 							Float.parseFloat(srclatlng[1]), Float.parseFloat(destlatlng[0]),
-							Float.parseFloat(destlatlng[1]));
-					//rideId = requestRide(productId,37.77f, -122.41f,37.49f, -122.41f);
+							Float.parseFloat(destlatlng[1]));*/
+					/*ToDo Hardcoded source,destination lat long since above wasn't working */ 
+					rideId = requestRide(productId,37.77f, -122.41f,37.49f, -122.41f);
 					
-
 					System.out.printf("Product ID %s%n", productId);
 					System.out.printf("Ride ID %s%n", rideId);
 
@@ -214,11 +217,13 @@ public class NewUberRide {
 		// secrets would not be kept local. Instead, have your server accept the
 		// redirect and return
 		// you the accessToken for a userId.
-		Properties secrets = loadSecretProperties();
 
+		/* ToDo Check-in Uber Secret Properties file for this to work or use my client id and secret to test
+		 *Uber code */
+		Properties secrets = loadSecretProperties();
 		String clientId = secrets.getProperty("clientId");
 		String clientSecret = secrets.getProperty("clientSecret");
-
+		
 		//String clientId = "SSIsYo9v_Gkb1izsL9vOfdtzkADX143b";
         //String clientSecret = "iO7FR7Igy79d8MJVA_uW7srHLtXR_1paqGtKzEUS";
         
@@ -242,6 +247,10 @@ public class NewUberRide {
 			localServerReceiver.stop();
 			localServerReceiver = new LocalServerReceiver.Builder().setPort(8080).build();
 		}*/
+		
+		/*ToDo the following URI has been added for UBER code by changing callback in Uber Login. If Bhavin
+		will change he has to update this callback in his login*/
+		
 		String redirectUri = "http://localhost:8080/RideShare";//localServerReceiver.getRedirectUri();
 
 		// Build an OAuth2Credentials object with your secrets.
