@@ -25,6 +25,7 @@ import com.uber.sdk.rides.client.model.Ride;
 import com.uber.sdk.rides.client.model.RideRequestParameters;
 import com.uber.sdk.rides.client.model.SandboxRideRequestParameters;
 
+import edu.nyu.cloud.beans.SerializableLatLng;
 import edu.nyu.cloud.beans.UberRide;
 
 /**
@@ -32,58 +33,64 @@ import edu.nyu.cloud.beans.UberRide;
  * command line.
  */
 public class NewUberRide {
+
 	private LocalServerReceiver localServerReceiver;
 	private UberRidesSyncService uberRidesService = null;
 	private Credential credential = null;
 	private Session session;
-	public NewUberRide() throws Exception
-	{
+
+	public NewUberRide() throws Exception {
 		credential = authenticate(System.getProperty("user.name"));
-		// LogManager.getLogManager().reset();
-		// Create session for the user
-		session = new Session.Builder().setCredential(credential).setEnvironment(Session.Environment.SANDBOX)
-				.build();
-		// Create the Uber API service object once the User is authenticated
+		session = new Session.Builder().setCredential(credential).setEnvironment(Session.Environment.SANDBOX).build();
 		uberRidesService = getApiInstance(session);
 	}
 
-	public List<UberRide> confirmRide(String source, String destination, int no_of_person)
+	public List<UberRide> confirmRide(SerializableLatLng source, SerializableLatLng destination, int no_of_person)
 			throws ApiException, IOException {
 		List<UberRide> uberridedetails = new ArrayList<UberRide>();
-		String rideId=null;
+		String rideId = null;
 		try {
-			String[] srclatlng = source.split(",");
-			String[] destlatlng = destination.split(",");
-
 			int submittedCapacity = no_of_person;
-			
-			/*List<Product> products = getProductList(uberRidesService, Float.parseFloat(srclatlng[0]),
-					Float.parseFloat(srclatlng[1]));*/
-			
-			/*ToDo Hardcoded source lat long to get product id in current location since the above one 
-			wasn't working*/
-			List<Product> products = getProductList(uberRidesService,37.79f, -122.39f);
+			/*
+			 * List<Product> products = getProductList(uberRidesService,
+			 * Float.parseFloat(srclatlng[0]), Float.parseFloat(srclatlng[1]));
+			 */
+
+			/*
+			 * ToDo Hardcoded source lat long to get product id in current
+			 * location since the above one wasn't working
+			 */
+			List<Product> products = getProductList(uberRidesService, 37.79f, -122.39f);
 			String productId = null;
 			for (Product p : products) {
 				if (p.getCapacity() == submittedCapacity) {
 
-					productId = p.getProductId();					
-					/*rideId = requestRide(productId, Float.parseFloat(srclatlng[0]),
-							Float.parseFloat(srclatlng[1]), Float.parseFloat(destlatlng[0]),
-							Float.parseFloat(destlatlng[1]));*/
-					/*ToDo Hardcoded source,destination lat long since above wasn't working */ 
-					rideId = requestRide(productId,37.77f, -122.41f,37.49f, -122.41f);
-					
+					productId = p.getProductId();
+					/*
+					 * rideId = requestRide(productId,
+					 * Float.parseFloat(srclatlng[0]),
+					 * Float.parseFloat(srclatlng[1]),
+					 * Float.parseFloat(destlatlng[0]),
+					 * Float.parseFloat(destlatlng[1]));
+					 */
+					/*
+					 * ToDo Hardcoded source,destination lat long since above
+					 * wasn't working
+					 */
+					rideId = requestRide(productId, 37.77f, -122.41f, 37.49f, -122.41f);
+
 					System.out.printf("Product ID %s%n", productId);
 					System.out.printf("Ride ID %s%n", rideId);
 
 					SandboxRideRequestParameters rideParameters = new SandboxRideRequestParameters.Builder()
 							.setStatus("accepted").build();
 					Response<Void> response = uberRidesService.updateSandboxRide(rideId, rideParameters);
-					System.out.println("status:"+ response.getStatus());
-					//uberridedetails.addAll(getRideDetails(rideId));
+					System.out.println("status:" + response.getStatus());
+					// uberridedetails.addAll(getRideDetails(rideId));
 					Ride listRide = getRideStatus(rideId);
-					UberRide uberride = new UberRide(p.getDisplayName(),p.getProductId(),rideId,p.getCapacity(),listRide.getDriver().getName(),listRide.getDriver().getPhoneNumber(),listRide.getEta(),listRide.getVehicle().getPictureUrl());
+					UberRide uberride = new UberRide(p.getDisplayName(), p.getProductId(), rideId, p.getCapacity(),
+							listRide.getDriver().getName(), listRide.getDriver().getPhoneNumber(), listRide.getEta(),
+							listRide.getVehicle().getPictureUrl());
 					uberridedetails.add(uberride);
 
 					break;
@@ -98,20 +105,19 @@ public class NewUberRide {
 		return uberridedetails;
 	}
 
-	public List<UberRide> getRideDetails(String rideId)
-	{
+	public List<UberRide> getRideDetails(String rideId) {
 		List<UberRide> uberridedetails = new ArrayList<UberRide>();
 		Ride listRide = getRideStatus(rideId);
-		UberRide uberride = new UberRide(null,null,rideId,0,listRide.getDriver().getName(),listRide.getDriver().getPhoneNumber(),listRide.getEta(),listRide.getVehicle().getPictureUrl());
+		UberRide uberride = new UberRide(null, null, rideId, 0, listRide.getDriver().getName(),
+				listRide.getDriver().getPhoneNumber(), listRide.getEta(), listRide.getVehicle().getPictureUrl());
 		uberridedetails.add(uberride);
 		return uberridedetails;
 	}
 
-	public int cancelRequest(String rideId) throws ApiException, NetworkException
-	{
+	public int cancelRequest(String rideId) throws ApiException, NetworkException {
 		uberRidesService.cancelRide(rideId);
-		SandboxRideRequestParameters rideParameters = new SandboxRideRequestParameters.Builder()
-				.setStatus("reject").build();
+		SandboxRideRequestParameters rideParameters = new SandboxRideRequestParameters.Builder().setStatus("reject")
+				.build();
 		Response<Void> response = uberRidesService.updateSandboxRide(rideId, rideParameters);
 		return response.getStatus();
 	}
@@ -130,8 +136,7 @@ public class NewUberRide {
 		return listRide;
 	}
 
-	private String requestRide(String productId1, Float startLat, Float startLong,
-			Float endLat, Float endLong) {
+	private String requestRide(String productId1, Float startLat, Float startLong, Float endLat, Float endLong) {
 		RideRequestParameters rideRequestParams = new RideRequestParameters.Builder()
 				.setPickupCoordinates(startLat, startLong).setProductId(productId1)
 				.setDropoffCoordinates(endLat, endLong).build();
@@ -188,7 +193,6 @@ public class NewUberRide {
 					oAuth2Credentials.getRedirectUri());
 			System.out.println("Press Enter when done.");
 
-
 			System.in.read();
 
 			// Generate an authorization URL.
@@ -199,11 +203,11 @@ public class NewUberRide {
 			// Wait for the authorization code.
 			String authorizationCode = localServerReceiver.waitForCode();
 			System.out.println("Authentication received.");
-			//localServerReceiver.stop();
+			// localServerReceiver.stop();
 			// Authenticate the user with the authorization code.
 			credential = oAuth2Credentials.authenticate(authorizationCode, userId);
 		}
-		//localServerReceiver.stop();
+		// localServerReceiver.stop();
 		return credential;
 	}
 
@@ -218,15 +222,17 @@ public class NewUberRide {
 		// redirect and return
 		// you the accessToken for a userId.
 
-		/* ToDo Check-in Uber Secret Properties file for this to work or use my client id and secret to test
-		 *Uber code */
+		/*
+		 * ToDo Check-in Uber Secret Properties file for this to work or use my
+		 * client id and secret to test Uber code
+		 */
 		Properties secrets = loadSecretProperties();
 		String clientId = secrets.getProperty("clientId");
 		String clientSecret = secrets.getProperty("clientSecret");
-		
-		//String clientId = "SSIsYo9v_Gkb1izsL9vOfdtzkADX143b";
-        //String clientSecret = "iO7FR7Igy79d8MJVA_uW7srHLtXR_1paqGtKzEUS";
-        
+
+		// String clientId = "SSIsYo9v_Gkb1izsL9vOfdtzkADX143b";
+		// String clientSecret = "iO7FR7Igy79d8MJVA_uW7srHLtXR_1paqGtKzEUS";
+
 		if (clientId.isEmpty() || clientSecret.isEmpty()) {
 			throw new IllegalArgumentException(
 					"Please enter your client ID and secret in the resources/secrets.properties file.");
@@ -241,24 +247,24 @@ public class NewUberRide {
 		AbstractDataStoreFactory dataStoreFactory = new FileDataStoreFactory(credentialDirectory);
 
 		// Start a local server to listen for the OAuth2 redirect.
-		/*if (localServerReceiver == null) {
-			localServerReceiver = new LocalServerReceiver.Builder().setPort(8080).build();
-		} else {
-			localServerReceiver.stop();
-			localServerReceiver = new LocalServerReceiver.Builder().setPort(8080).build();
-		}*/
-		
-		/*ToDo the following URI has been added for UBER code by changing callback in Uber Login. If Bhavin
-		will change he has to update this callback in his login*/
-		
-		String redirectUri = "http://localhost:8080/RideShare";//localServerReceiver.getRedirectUri();
+		/*
+		 * if (localServerReceiver == null) { localServerReceiver = new
+		 * LocalServerReceiver.Builder().setPort(8080).build(); } else {
+		 * localServerReceiver.stop(); localServerReceiver = new
+		 * LocalServerReceiver.Builder().setPort(8080).build(); }
+		 */
+
+		/*
+		 * ToDo the following URI has been added for UBER code by changing
+		 * callback in Uber Login. If Bhavin will change he has to update this
+		 * callback in his login
+		 */
+
+		String redirectUri = "http://localhost:8080/RideShare";// localServerReceiver.getRedirectUri();
 
 		// Build an OAuth2Credentials object with your secrets.
-		return new OAuth2Credentials.Builder()
-                .setCredentialDataStoreFactory(dataStoreFactory)
-                .setRedirectUri(redirectUri)
-                .setClientSecrets(clientId, clientSecret)
-                .build();
+		return new OAuth2Credentials.Builder().setCredentialDataStoreFactory(dataStoreFactory)
+				.setRedirectUri(redirectUri).setClientSecrets(clientId, clientSecret).build();
 	}
 
 	/**

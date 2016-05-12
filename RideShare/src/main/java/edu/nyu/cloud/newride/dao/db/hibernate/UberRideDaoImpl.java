@@ -2,9 +2,6 @@
  * 
  */
 package edu.nyu.cloud.newride.dao.db.hibernate;
-import java.util.List;
-
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 
 import edu.nyu.cloud.beans.UberRide;
@@ -25,12 +22,5 @@ public class UberRideDaoImpl extends ModifiableCommonDBDao<UberRide, UberRide> i
 		System.out.println(uberRide.getId());
 		savePersistent(uberRide);
 	}
-	
-	
-/*	@Override
-	public List<UberRide> searchUberRideOnSource(String source, String destination) {
-		// TODO Auto-generated method stub
-		return null;
-	}*/
 
 }
