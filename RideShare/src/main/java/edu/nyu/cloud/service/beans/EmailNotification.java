@@ -15,8 +15,9 @@ public class EmailNotification {
 
 	public void sendConfirmationEmail(String userId, String emailBody) {
 		UserProfile userProfileObj = userCache.getUserByUserName(userId);
-		String toAddress = userProfileObj.getEmailAddress();
-		emailService.sendEmail(toAddress, emailBody);
+		System.out.println(userCache.getUserByUserName(userId).getEmailAddress());
+		//String toAddress = userProfileObj.getEmailAddress();
+		emailService.sendEmail(userCache.getUserByUserName(userId).getEmailAddress(), emailBody);
 	}
 
 }
